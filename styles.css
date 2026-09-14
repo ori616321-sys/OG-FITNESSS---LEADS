@@ -1,0 +1,575 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap');
+
+body {
+    font-family: 'Heebo', sans-serif;
+    background-color: #09090b; /* zinc-950 */
+    color: #fafafa; /* zinc-50 */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom Scrollbar for sleek look */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #27272a; /* zinc-800 */
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46; /* zinc-700 */
+}
+
+/* Neon Glow Effects */
+.neon-glow-green {
+    box-shadow: 0 0 15px rgba(132, 204, 22, 0.15), 0 0 5px rgba(132, 204, 22, 0.1);
+}
+
+.neon-glow-green-hover:hover {
+    box-shadow: 0 0 20px rgba(132, 204, 22, 0.3), 0 0 8px rgba(132, 204, 22, 0.2);
+    border-color: rgba(132, 204, 22, 0.5);
+}
+
+.neon-border-green {
+    border-color: rgba(132, 204, 22, 0.3);
+}
+
+.neon-border-green:focus-within {
+    border-color: #84cc16;
+    box-shadow: 0 0 10px rgba(132, 204, 22, 0.25);
+}
+
+/* Multi-step Animations */
+.step-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.step-card {
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-card.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+/* Slide classes for transition */
+.slide-out-left {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-out-right {
+    opacity: 0;
+    transform: translateX(100%);
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(100%);
+    pointer-events: none;
+}
+
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+/* Pulse Animation for loading state */
+@keyframes neon-pulse {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: 0 0 15px rgba(132, 204, 22, 0.2);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 25px rgba(132, 204, 22, 0.5), 0 0 10px rgba(132, 204, 22, 0.3);
+    }
+}
+
+.neon-pulse-element {
+    animation: neon-pulse 2s infinite ease-in-out;
+}
+
+/* Shimmer effect for progress bar */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.progress-shimmer {
+    background: linear-gradient(90deg, #84cc16 25%, #bef264 50%, #84cc16 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite linear;
+}
+
+/* Radio button scale transitions */
+.option-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option-btn:active {
+    transform: scale(0.97);
+}
+
+.option-btn.selected {
+    background-color: rgba(132, 204, 22, 0.08);
+    border-color: #84cc16;
+    color: #ffffff;
+}
+
+.option-btn.selected .circle-indicator {
+    border-color: #84cc16;
+    background-color: #84cc16;
+}
+
+.option-btn.selected .circle-indicator::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: #09090b;
+    border-radius: 50%;
+}
+
+.checkbox-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checkbox-btn:active {
+    transform: scale(0.97);
+}
+
+.checkbox-btn.selected {
+    background-color: rgba(132, 204, 22, 0.08);
+    border-color: #84cc16;
+    color: #ffffff;
+}
+
+.checkbox-btn.selected .checkbox-indicator {
+    border-color: #84cc16;
+    background-color: #84cc16;
+    color: #09090b;
+}
+
+.checkbox-btn .checkbox-indicator {
+    color: transparent;
+    transition: all 0.15s ease;
+}
+
+/* Form input custom styles */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+}
+
+.ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+.text-lime-450 {
+    color: #a3e635;
+}
+
+/* CRM Table scrollbar adjustments */
+.overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #27272a #09090b;
+}
+
+/* Modal appearance transition */
+@keyframes modal-scale {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#admin-password-modal > div,
+#lead-details-modal > div,
+#edit-plan-modal > div,
+#cms-exercise-modal > div,
+#session-details-modal > div {
+    animation: modal-scale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Table header column alignments */
+th {
+    text-align: right !important;
+}
+
+/* Medical alert banner animation */
+@keyframes alert-pulse {
+    0%, 100% {
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+    50% {
+        border-color: rgba(239, 68, 68, 0.9);
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+}
+
+.medical-alert-pulse {
+    animation: alert-pulse 2.5s infinite ease-in-out;
+}
+
+/* Cookie banner slide up */
+@keyframes banner-slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cookie-banner-enter {
+    animation: banner-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Force table horizontal scroll on mobile */
+@media (max-width: 768px) {
+    .responsive-admin-table {
+        min-width: 680px;
+    }
+}
+
+/* ==========================================================================
+   GENDER SELECTOR BUTTONS
+   ========================================================================== */
+.gender-btn {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.gender-btn:active {
+    transform: scale(0.97);
+}
+
+.gender-btn.selected-male {
+    border-color: #3b82f6 !important;
+    background-color: rgba(59, 130, 246, 0.12) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+}
+
+.gender-btn.selected-female {
+    border-color: #ec4899 !important;
+    background-color: rgba(236, 72, 153, 0.15) !important;
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.35);
+}
+
+/* ==========================================================================
+   DYNAMIC PINK THEME (ACTIVATED WHEN "אישה" IS SELECTED)
+   ========================================================================== */
+body.theme-pink {
+    --theme-accent: #ec4899;
+    --theme-accent-light: #f472b6;
+    --theme-accent-dark: #db2777;
+    --theme-glow: rgba(236, 72, 153, 0.3);
+}
+
+body.theme-pink ::selection {
+    background-color: rgba(236, 72, 153, 0.35);
+    color: #ffffff;
+}
+
+/* Tailwind Lime Overrides to Neon Pink */
+body.theme-pink .bg-lime-500 {
+    background-color: #ec4899 !important;
+}
+
+body.theme-pink .hover\:bg-lime-600:hover {
+    background-color: #db2777 !important;
+}
+
+body.theme-pink .text-lime-400,
+body.theme-pink .text-lime-450 {
+    color: #f472b6 !important;
+}
+
+body.theme-pink .border-lime-500 {
+    border-color: #ec4899 !important;
+}
+
+body.theme-pink .border-lime-500\/20,
+body.theme-pink .border-lime-500\/25,
+body.theme-pink .border-lime-500\/30,
+body.theme-pink .border-lime-500\/50 {
+    border-color: rgba(236, 72, 153, 0.35) !important;
+}
+
+body.theme-pink .bg-lime-500\/5 {
+    background-color: rgba(236, 72, 153, 0.05) !important;
+}
+
+body.theme-pink .bg-lime-500\/10 {
+    background-color: rgba(236, 72, 153, 0.12) !important;
+}
+
+body.theme-pink .bg-lime-500\/20 {
+    background-color: rgba(236, 72, 153, 0.22) !important;
+}
+
+body.theme-pink .shadow-lime-500\/10,
+body.theme-pink .shadow-lime-500\/20 {
+    box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.3) !important;
+}
+
+body.theme-pink .from-lime-500\/20 {
+    --tw-gradient-from: rgba(236, 72, 153, 0.25) var(--tw-gradient-from-position) !important;
+}
+
+body.theme-pink .to-lime-500\/5 {
+    --tw-gradient-to: rgba(236, 72, 153, 0.05) var(--tw-gradient-to-position) !important;
+}
+
+/* Neon Glows in Pink */
+body.theme-pink .neon-glow-green {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.35), 0 0 8px rgba(236, 72, 153, 0.2) !important;
+    border-color: rgba(236, 72, 153, 0.45) !important;
+}
+
+body.theme-pink .neon-glow-green-hover:hover {
+    box-shadow: 0 0 22px rgba(236, 72, 153, 0.4), 0 0 10px rgba(236, 72, 153, 0.25) !important;
+    border-color: rgba(236, 72, 153, 0.6) !important;
+}
+
+body.theme-pink .neon-border-green {
+    border-color: rgba(236, 72, 153, 0.35) !important;
+}
+
+body.theme-pink .neon-border-green:focus-within {
+    border-color: #ec4899 !important;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.35) !important;
+}
+
+body.theme-pink input:focus,
+body.theme-pink textarea:focus,
+body.theme-pink select:focus {
+    border-color: #ec4899 !important;
+}
+
+/* Progress Shimmer Pink */
+body.theme-pink .progress-shimmer {
+    background: linear-gradient(90deg, #ec4899 25%, #f472b6 50%, #ec4899 75%) !important;
+    background-size: 200% 100% !important;
+    animation: shimmer 2.5s infinite linear;
+}
+
+/* Selection Buttons in Pink */
+body.theme-pink .option-btn.selected {
+    background-color: rgba(236, 72, 153, 0.12) !important;
+    border-color: #ec4899 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+}
+
+body.theme-pink .option-btn.selected .circle-indicator {
+    border-color: #ec4899 !important;
+    background-color: #ec4899 !important;
+}
+
+body.theme-pink .checkbox-btn.selected {
+    background-color: rgba(236, 72, 153, 0.12) !important;
+    border-color: #ec4899 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+}
+
+body.theme-pink .checkbox-btn.selected .checkbox-indicator {
+    border-color: #ec4899 !important;
+    background-color: #ec4899 !important;
+    color: #09090b !important;
+}
+
+/* Pregnancy Selection Styles */
+.pregnancy-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pregnancy-btn:active {
+    transform: scale(0.97);
+}
+
+.pregnancy-btn.selected {
+    border-color: #ec4899 !important;
+    background-color: rgba(236, 72, 153, 0.15) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+}
+
+.pregnancy-btn.selected .circle-indicator {
+    border-color: #ec4899 !important;
+    background-color: #ec4899 !important;
+}
+
+.pregnancy-btn.selected .circle-indicator::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: #09090b;
+    border-radius: 50%;
+}
+
+.trimester-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trimester-btn:active {
+    transform: scale(0.97);
+}
+
+.trimester-btn.selected {
+    border-color: #ec4899 !important;
+    background-color: rgba(236, 72, 153, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
+/* Drag and Drop Styling for Workout Plan Builder */
+.plan-exercise-row {
+    transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.plan-exercise-row.is-dragging {
+    opacity: 0.35;
+    border: 1px dashed #84cc16 !important;
+    background-color: rgba(132, 204, 22, 0.08) !important;
+    transform: scale(0.98);
+}
+
+.plan-exercise-row.drag-over-top {
+    border-top: 3px solid #84cc16 !important;
+    transform: translateY(2px);
+}
+
+.plan-exercise-row.drag-over-bottom {
+    border-bottom: 3px solid #84cc16 !important;
+    transform: translateY(-2px);
+}
+
+.drag-handle {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* ==========================================================================
+   PDF & PRINT STYLES (A4 Branded Format)
+   ========================================================================== */
+#pdf-printable-container {
+    display: none;
+    direction: rtl;
+    text-align: right;
+    font-family: Arial, Tahoma, 'Segoe UI', sans-serif;
+    color: #fafafa;
+    background-color: #09090b;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#pdf-printable-container.rendering-pdf {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 794px; /* Standard A4 width at 96 DPI */
+    z-index: 999999;
+    background-color: #ffffff;
+    color: #18181b;
+    padding: 24px;
+    font-size: 12px;
+}
+
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    #pdf-printable-container, #pdf-printable-container * {
+        visibility: visible !important;
+    }
+    #pdf-printable-container {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #09090b !important;
+        color: #fafafa !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+.pdf-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+}
+
+.pdf-no-break,
+.pdf-card,
+.pdf-day-block,
+.pdf-day-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+/* Stage Lightbox Animation & Styling */
+#image-modal > div {
+    animation: modal-scale 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stage-tab.active-stage {
+    background-color: #84cc16 !important;
+    color: #09090b !important;
+    font-weight: 800;
+}
+
+/* Cropper & Avatar Utilities */
+.touch-none {
+    touch-action: none;
+}
+.cursor-grab {
+    cursor: grab;
+}
+.cursor-grabbing {
+    cursor: grabbing;
+}
+

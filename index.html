@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lead Magnet & Fitness Assessment AI | Coach Gino</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            400: '#84cc16',
+                            500: '#65a30d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf.js for Branded PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-zinc-950 text-zinc-50 min-h-screen flex flex-col justify-between selection:bg-lime-500/30 selection:text-white relative">
+
+    <!-- Cookie Consent Legal Banner -->
+    <div id="cookie-consent-banner" class="hidden fixed bottom-0 inset-x-0 z-[80] p-4 bg-zinc-900/95 backdrop-blur-md border-t border-zinc-800 shadow-2xl cookie-banner-enter">
+        <div class="max-w-md mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-right">
+            <div class="space-y-1">
+                <span class="font-bold text-xs text-white flex items-center gap-1.5">
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-lime-400"></i>
+                    שמירה על הפרטיות ושימוש בעוגיות (Cookies)
+                </span>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">
+                    אתר זה עושה שימוש בעוגיות (Cookies) כדי להעניק לך את חוויית האבחון הטובה ביותר ולמדוד נתוני גלישה בהתאם למדיניות הפרטיות.
+                </p>
+            </div>
+            <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                <button onclick="acceptCookieConsent()" class="w-full sm:w-auto py-2 px-5 bg-lime-500 hover:bg-lime-600 text-black font-extrabold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/10">
+                    אישור והמשך
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container wrapper: Mobile-First Max Width -->
+    <div class="w-full max-w-md mx-auto min-h-screen flex flex-col bg-zinc-950 border-x border-zinc-900/50 shadow-2xl relative">
+        
+        <!-- Header: Progressive bar & navigation -->
+        <header id="app-header" class="hidden p-4 border-b border-zinc-900/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center justify-between mb-3">
+                <button id="back-btn" class="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors flex items-center gap-1 text-sm font-medium">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <span>חזרה</span>
+                </button>
+                <div class="text-xs text-zinc-400 font-medium">
+                    שלב <span id="current-step-display">1</span> מתוך <span id="total-steps-display">4</span>
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden">
+                <div id="progress-bar" class="progress-shimmer h-full bg-lime-500 transition-all duration-300 w-0"></div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow flex flex-col justify-center p-5 step-container">
+
+            <!-- ================= STEP 0: INTRO SCREEN ================= -->
+            <div id="step-0" class="step-card active flex flex-col justify-between h-full py-6 relative">
+                
+                <!-- Secret Admin Trigger Icon (⚡ Zap - 3 clicks to enter) -->
+                <div id="admin-trigger" class="absolute -top-1 right-0 w-8 h-8 rounded-lg border border-zinc-900 bg-zinc-900/30 hover:bg-zinc-900/80 text-zinc-700 hover:text-lime-400 transition-all flex items-center justify-center cursor-pointer select-none">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                </div>
+
+                <div class="space-y-6 my-auto text-center">
+                    <!-- Brand Icon / Coach Avatar (Display Only) -->
+                    <div class="relative mx-auto w-20 h-20 flex items-center justify-center select-none">
+                        <div id="intro-brand-avatar" 
+                             class="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-tr from-lime-500/20 to-lime-500/5 flex items-center justify-center border-2 border-lime-500/30 neon-glow-green shadow-xl relative">
+                            
+                            <!-- Dumbbell Fallback View (Default) -->
+                            <div id="intro-avatar-default" class="flex items-center justify-center w-full h-full">
+                                <i data-lucide="dumbbell" class="w-10 h-10 text-lime-400"></i>
+                            </div>
+
+                            <!-- Custom Image View (Shown when photo uploaded) -->
+                            <img id="intro-avatar-image" src="" alt="Coach Gino" class="hidden w-full h-full object-cover rounded-full" />
+                        </div>
+                    </div>
+
+
+                    
+                    <div class="space-y-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-lime-500/10 text-lime-400 border border-lime-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-ping"></span>
+                            <span id="landing-badge-text">אבחון כושר מבוסס AI & ביומכניקה</span>
+                        </span>
+                        <h1 id="landing-headline" class="text-3xl font-extrabold tracking-tight text-white leading-tight">
+                            תוכנית אימונים בשווי מאות שקלים בחינם!
+                        </h1>
+                        <p id="landing-subheadline" class="text-zinc-400 text-base leading-relaxed max-w-sm mx-auto">
+                            קבל תוכנית אימונים מקצועית, מעמיקה ומותאמת אישית בתוך 2 דקות, בהתאם למטרות, לציוד ולמבנה הגוף שלך.
+                        </p>
+                    </div>
+
+                    <!-- Benefit Bullets -->
+                    <div class="bg-zinc-900/50 border border-zinc-900 rounded-2xl p-4 text-right space-y-3 max-w-sm mx-auto">
+                        <div class="flex items-start gap-3">
+                            <span class="p-1 rounded-lg bg-lime-500/10 text-lime-400 mt-0.5"><i data-lucide="shield-check" class="w-4 h-4"></i></span>
+                            <div>
+                                <h4 id="bullet-1-title" class="font-bold text-sm text-zinc-100">דיוק ביומכני ומניעת פציעות</h4>
+                                <p id="bullet-1-desc" class="text-xs text-zinc-400">התייחסות אישית למגבלות פיזיות, פציעות עבר ורגישויות.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="p-1 rounded-lg bg-lime-500/10 text-lime-400 mt-0.5"><i data-lucide="check" class="w-4 h-4"></i></span>
+                            <div>
+                                <h4 id="bullet-2-title" class="font-bold text-sm text-zinc-100">תוכנית אימונים אישית מלאה</h4>
+                                <p id="bullet-2-desc" class="text-xs text-zinc-400">חלוקת ימים, סטים, חזרות, זמני מנוחה, סרטוני הדגמה ותמונות ביצוע.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="p-1 rounded-lg bg-lime-500/10 text-lime-400 mt-0.5"><i data-lucide="user-check" class="w-4 h-4"></i></span>
+                            <div>
+                                <h4 id="bullet-3-title" class="font-bold text-sm text-zinc-100">100% שליטה ומגע אישי</h4>
+                                <p id="bullet-3-desc" class="text-xs text-zinc-400">הוסף נוסח והערות אישיות משלך בכל שלב של השאלון.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8">
+                    <button onclick="nextStep()" class="w-full py-4 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-bold text-lg rounded-xl shadow-lg shadow-lime-500/20 transition-all duration-200 flex items-center justify-center gap-2">
+                        <span id="landing-btn-text">התחל באבחון המהיר</span>
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <p id="landing-subtext" class="text-center text-xs text-zinc-500 mt-3">ללא עלות • אבחון של 2 דקות בלבד</p>
+                </div>
+            </div>
+
+            <!-- ================= STEP 1: PERSONAL PROFILE & LIFESTYLE ================= -->
+            <div id="step-1" class="step-card hidden space-y-6">
+                <div class="space-y-2">
+                    <h2 id="step-1-title" class="text-2xl font-bold text-white">פרופיל אישי ומדדי גוף</h2>
+                    <p id="step-1-subtitle" class="text-sm text-zinc-400">ספר לנו עליך ועל שגרת היום-יום שלך (ניתן לפרט בכל שאלה).</p>
+                </div>
+
+                <!-- 1. Gender Question (Male / Female) with Dynamic Theme Switch -->
+                <div class="space-y-2.5">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-gender-question">
+                        1. הגדרת מגדר:
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" id="gender-male-btn" onclick="selectGender('male')" class="gender-btn flex flex-col items-center justify-center p-3.5 rounded-xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-900 transition-all gap-2 group select-none cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i data-lucide="user" class="w-6 h-6"></i>
+                            </div>
+                            <span class="font-bold text-sm text-zinc-100" id="label-gender-male">גבר</span>
+                        </button>
+                        <button type="button" id="gender-female-btn" onclick="selectGender('female')" class="gender-btn flex flex-col items-center justify-center p-3.5 rounded-xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-900 transition-all gap-2 group select-none cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i data-lucide="sparkles" class="w-6 h-6"></i>
+                            </div>
+                            <span class="font-bold text-sm text-zinc-100" id="label-gender-female">אישה</span>
+                        </button>
+                    </div>
+                    <span id="gender-error" class="text-xs text-red-500 hidden">נא לבחור גבר או אישה כדי להמשיך</span>
+                </div>
+
+                <!-- Pregnancy Question (Appears only when "אישה" is selected) -->
+                <div id="wrapper-pregnancy-question" class="hidden space-y-2.5 bg-pink-950/20 p-3.5 rounded-xl border border-pink-500/25 transition-all">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs shrink-0">
+                            <i data-lucide="baby" class="w-4 h-4"></i>
+                        </span>
+                        <label class="block text-sm font-semibold text-zinc-200" id="label-pregnancy-question">
+                            האם את כרגע בהריון או לאחר לידה?
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" id="pregnancy-no-btn" onclick="selectPregnancy('no')" class="pregnancy-btn p-3 bg-zinc-900/80 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-center transition-all select-none flex items-center justify-center gap-2">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-xs font-bold text-zinc-100" id="label-pregnancy-no">לא</span>
+                        </button>
+                        <button type="button" id="pregnancy-yes-btn" onclick="selectPregnancy('yes')" class="pregnancy-btn p-3 bg-zinc-900/80 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-center transition-all select-none flex items-center justify-center gap-2">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-xs font-bold text-zinc-100" id="label-pregnancy-yes">כן, אני בהריון 🤰</span>
+                        </button>
+                    </div>
+                    <!-- Conditional details when pregnant -->
+                    <div id="wrapper-pregnancy-details" class="hidden space-y-2 pt-1.5 border-t border-pink-500/20 mt-2">
+                        <label class="block text-xs font-bold text-pink-300">באיזה שלב של ההריון את?</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" onclick="selectPregnancyTrimester('trimester_1')" class="trimester-btn p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300 font-semibold text-center hover:border-pink-500/50 transition-all" data-trimester="trimester_1">
+                                שליש 1 (שבועות 1-13)
+                            </button>
+                            <button type="button" onclick="selectPregnancyTrimester('trimester_2')" class="trimester-btn p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300 font-semibold text-center hover:border-pink-500/50 transition-all" data-trimester="trimester_2">
+                                שליש 2 (שבועות 14-27)
+                            </button>
+                            <button type="button" onclick="selectPregnancyTrimester('trimester_3')" class="trimester-btn p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-300 font-semibold text-center hover:border-pink-500/50 transition-all" data-trimester="trimester_3">
+                                שליש 3 (שבועות 28+)
+                            </button>
+                        </div>
+                        <div class="pt-1">
+                            <input type="text" id="input-pregnancy-notes" placeholder="באיזה שבוע את? הנחיות מרופא הנשים, הגבלות או תחושות מיוחדות..." 
+                                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-white placeholder-zinc-500 focus:border-pink-500 transition-all">
+                        </div>
+                        <p class="text-[10px] text-pink-400/90 leading-relaxed">
+                            ⚡ <strong>הערה ביומכנית חשובה:</strong> בתוכנית תופעל הגנה מוחלטת ללא שכיבה שטוחה על הגב וללא עומס לחץ תוך-בטני מסוכן.
+                        </p>
+                    </div>
+                    <span id="pregnancy-error" class="text-xs text-red-500 hidden">שדה חובה: נא לציין האם את בהריון</span>
+                </div>
+
+                <!-- 2. Body Metrics: Age, Height, Weight -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-metrics-question">
+                        2. גיל ומדדי גוף (גובה ומשקל):
+                    </label>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-zinc-300" for="input-age" id="label-input-age">גיל:</label>
+                            <div class="relative">
+                                <input type="number" id="input-age" min="12" max="100" placeholder="28" 
+                                    class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-2 text-center text-white font-bold placeholder-zinc-650 focus:border-lime-500 transition-all neon-border-green">
+                            </div>
+                            <span id="age-error" class="text-[10px] text-red-500 hidden block">גיל 12-100</span>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-zinc-300" for="input-height" id="label-input-height">גובה (ס"מ):</label>
+                            <div class="relative">
+                                <input type="number" id="input-height" min="100" max="250" placeholder="175" 
+                                    class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-2 text-center text-white font-bold placeholder-zinc-650 focus:border-lime-500 transition-all neon-border-green">
+                            </div>
+                            <span id="height-error" class="text-[10px] text-red-500 hidden block">100-250 ס"מ</span>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-zinc-300" for="input-weight" id="label-input-weight">משקל (ק"ג):</label>
+                            <div class="relative">
+                                <input type="number" id="input-weight" min="30" max="300" placeholder="75" 
+                                    class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-2 text-center text-white font-bold placeholder-zinc-650 focus:border-lime-500 transition-all neon-border-green">
+                            </div>
+                            <span id="weight-error" class="text-[10px] text-red-500 hidden block">30-300 ק"ג</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Free text note for Age / Body -->
+                    <div class="pt-1">
+                        <textarea id="note-age" rows="1" placeholder="הערה או דגש אישי שלך לגבי הגיל, הגובה או המצב הגופני (אופציונלי)..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-2 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- 3. Occupation / Daily Activity + Student Option + Other + Note -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-activity-question">3. אופי התעסוקה ורמת הפעילות היומית:</label>
+                    <div class="grid grid-cols-1 gap-2.5" id="activity-options-container">
+                        <button type="button" data-field="activity" data-value="office" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div>
+                                <div class="font-bold text-sm text-zinc-100" data-opt-title="office">עבודה משרדית / סטודנט / ישיבה ממושכת לאורך היום</div>
+                                <div class="text-xs text-zinc-400" data-opt-desc="office">מרבית שעות היום בלימודים או בישיבה מול מסך, מעט מאוד תנועה יומיומית</div>
+                            </div>
+                        </button>
+                        <button type="button" data-field="activity" data-value="light" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div>
+                                <div class="font-bold text-sm text-zinc-100" data-opt-title="light">עבודה בתנועה קלה / עמידה</div>
+                                <div class="text-xs text-zinc-400" data-opt-desc="light">עבודה בעמידה, הליכה מתונה (מוכרים, מורים וכו')</div>
+                            </div>
+                        </button>
+                        <button type="button" data-field="activity" data-value="heavy" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div>
+                                <div class="font-bold text-sm text-zinc-100" data-opt-title="heavy">עבודה פיזית מאומצת</div>
+                                <div class="text-xs text-zinc-400" data-opt-desc="heavy">הרמת משקלים, עבודת כפיים, תנועה מרובה ללא הפסקה</div>
+                            </div>
+                        </button>
+                        <!-- Other Button -->
+                        <button type="button" data-field="activity" data-value="other" class="option-btn flex items-center gap-3 p-3 bg-zinc-900/40 hover:bg-zinc-900 border border-dashed border-zinc-750 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-lime-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" id="label-activity-other">אחר (הגדר בעצמך)</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Hidden input revealed when 'other' is chosen -->
+                    <div id="wrapper-activity-other" class="hidden pt-1">
+                        <input type="text" id="input-activity-other" placeholder="פרט את אופי העבודה והפעילות שלך..." 
+                            class="w-full bg-zinc-900 border border-lime-500/50 rounded-xl py-2.5 px-3 text-sm text-white placeholder-zinc-600 focus:border-lime-500 transition-all">
+                    </div>
+                    <!-- Free text note -->
+                    <div class="pt-1">
+                        <textarea id="note-activity" rows="1" placeholder="הערה או דגש אישי נוסף לגבי העבודה ושגרת היום שלך (אופציונלי)..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-2 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- 4. Goal + Other + Note -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-goal-question">4. מטרת העל שלך:</label>
+                    <div class="grid grid-cols-1 gap-2.5" id="goal-options-container">
+                        <button type="button" data-field="goal" data-value="mass" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="mass">עלייה במסת שריר (מסה נקייה)</span>
+                            </div>
+                        </button>
+                        <button type="button" data-field="goal" data-value="shred" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="shred">חיטוב וירידה באחוזי שומן</span>
+                            </div>
+                        </button>
+                        <button type="button" data-field="goal" data-value="strength" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="strength">שיפור כוח וביצועים ספורטיביים</span>
+                            </div>
+                        </button>
+                        <button type="button" data-field="goal" data-value="recomp" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="activity" class="w-4 h-4 text-lime-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="recomp">חיטוב ושינוי הרכב הגוף (Recomposition)</span>
+                            </div>
+                        </button>
+                        <!-- Other Button -->
+                        <button type="button" data-field="goal" data-value="other" class="option-btn flex items-center gap-3 p-3 bg-zinc-900/40 hover:bg-zinc-900 border border-dashed border-zinc-750 rounded-xl text-right text-zinc-300 transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-lime-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" id="label-goal-other">אחר (הגדר בעצמך)</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="wrapper-goal-other" class="hidden pt-1">
+                        <input type="text" id="input-goal-other" placeholder="פרט את מטרת העל המדויקת שלך (למשל: שיקום פציעה, הכנה למבחן כושר)..." 
+                            class="w-full bg-zinc-900 border border-lime-500/50 rounded-xl py-2.5 px-3 text-sm text-white placeholder-zinc-600 focus:border-lime-500 transition-all">
+                    </div>
+                    <div class="pt-1">
+                        <textarea id="note-goal" rows="1" placeholder="הערה או דגש אישי נוסף לגבי המטרה שלך (אופציונלי)..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-2 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="pt-4">
+                    <button onclick="validateStep1() && nextStep()" class="w-full py-3.5 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        <span id="btn-step1-next-text">המשך לשלב הבא</span>
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- ================= STEP 2: EXPERIENCE, INJURIES & EQUIPMENT ================= -->
+            <div id="step-2" class="step-card hidden space-y-6">
+                <div class="space-y-2">
+                    <h2 id="step-2-title" class="text-2xl font-bold text-white">ניסיון, פציעות ומבנה אימונים</h2>
+                    <p id="step-2-subtitle" class="text-sm text-zinc-400">במידה וקיימת מגבלה או פציעה, נפנה אותך לשיחת ייעוץ אישית ומקצועית.</p>
+                </div>
+
+                <!-- 5. Experience + Other + Note -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-experience-question">5. רמת ניסיון באימוני כוח:</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="experience-options-container">
+                        <button type="button" data-field="experience" data-value="beginner" class="option-btn p-3 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-center transition-all select-none flex flex-col items-center justify-center gap-1.5">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center"></span>
+                            <span class="text-xs font-bold text-zinc-100" data-opt-title="beginner">מתחיל</span>
+                            <span class="text-[10px] text-zinc-500" data-opt-desc="beginner">פחות מ-6 חודשים</span>
+                        </button>
+                        <button type="button" data-field="experience" data-value="active" class="option-btn p-3 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-center transition-all select-none flex flex-col items-center justify-center gap-1.5">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center"></span>
+                            <span class="text-xs font-bold text-zinc-100" data-opt-title="active">מתאמן פעיל</span>
+                            <span class="text-[10px] text-zinc-500" data-opt-desc="active">חצי שנה עד שנתיים</span>
+                        </button>
+                        <button type="button" data-field="experience" data-value="advanced" class="option-btn p-3 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-center transition-all select-none flex flex-col items-center justify-center gap-1.5">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center"></span>
+                            <span class="text-xs font-bold text-zinc-100" data-opt-title="advanced">מתקדם</span>
+                            <span class="text-[10px] text-zinc-500" data-opt-desc="advanced">מעל שנתיים</span>
+                        </button>
+                        <button type="button" data-field="experience" data-value="other" class="option-btn p-3 bg-zinc-900/40 hover:bg-zinc-900 border border-dashed border-zinc-750 rounded-xl text-center transition-all select-none flex flex-col items-center justify-center gap-1.5">
+                            <span class="circle-indicator w-3.5 h-3.5 rounded-full border border-zinc-700 flex items-center justify-center"></span>
+                            <span class="text-xs font-bold text-zinc-100" id="label-experience-other">אחר</span>
+                            <span class="text-[10px] text-zinc-500" id="label-experience-other-sub">פרט בעצמך</span>
+                        </button>
+                    </div>
+
+                    <div id="wrapper-experience-other" class="hidden pt-1">
+                        <input type="text" id="input-experience-other" placeholder="פרט את הרקע והניסיון שלך באימונים..." 
+                            class="w-full bg-zinc-900 border border-lime-500/50 rounded-xl py-2 px-3 text-sm text-white placeholder-zinc-600 focus:border-lime-500 transition-all">
+                    </div>
+                    <div class="pt-1">
+                        <textarea id="note-experience" rows="1" placeholder="הערה אישית לגבי ניסיון קודם או הפסקות ארוכות באימונים..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-1.5 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- 6. Frequency (2 Options Only) + Note -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-frequency-question">6. תדירות אימונים שבועית מועדפת:</label>
+                    <div class="grid grid-cols-1 gap-2.5" id="frequency-options-container">
+                        <button type="button" data-field="frequency" data-value="2-3" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none cursor-pointer">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="2-3">2-3 פעמים בשבוע</span>
+                                <span class="text-xs text-zinc-400 block" data-opt-desc="2-3"></span>
+                            </div>
+                        </button>
+                        <button type="button" data-field="frequency" data-value="4+" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none cursor-pointer">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="4+">4+ ימים בשבוע</span>
+                                <span class="text-xs text-zinc-400 block" data-opt-desc="4+"></span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Hidden container for compatibility -->
+                    <div id="wrapper-frequency-other" class="hidden">
+                        <input type="hidden" id="input-frequency-other" value="">
+                    </div>
+                    <div class="pt-1">
+                        <textarea id="note-frequency" rows="1" placeholder="הערה אישית לגבי זמני אימון או התאוששות..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-1.5 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- 7. Injuries & Sensitivities -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-injuries-question">
+                        7. פציעות קודמות, רגישויות או מגבלות תנועה:
+                        <span class="text-[11px] text-lime-400 font-normal block mt-0.5" id="label-injuries-warning">פציעות דורשות התייחסות מיוחדת כדי למנוע החמרה ונזק</span>
+                    </label>
+                    
+                    <div class="grid grid-cols-2 gap-2" id="injuries-options-container">
+                        <button type="button" data-injury="back" class="checkbox-btn flex items-center gap-2.5 p-2.5 bg-zinc-900/60 border border-zinc-850 rounded-lg text-right transition-all select-none">
+                            <span class="checkbox-indicator w-4 h-4 rounded border border-zinc-700 flex items-center justify-center shrink-0 text-black font-extrabold text-[10px]">✔</span>
+                            <span class="text-xs font-medium text-zinc-200" data-injury-label="back">גב תחתון / פריצת דיסק</span>
+                        </button>
+                        <button type="button" data-injury="shoulders" class="checkbox-btn flex items-center gap-2.5 p-2.5 bg-zinc-900/60 border border-zinc-850 rounded-lg text-right transition-all select-none">
+                            <span class="checkbox-indicator w-4 h-4 rounded border border-zinc-700 flex items-center justify-center shrink-0 text-black font-extrabold text-[10px]">✔</span>
+                            <span class="text-xs font-medium text-zinc-200" data-injury-label="shoulders">כתפיים / שרוול מסובב</span>
+                        </button>
+                        <button type="button" data-injury="knees" class="checkbox-btn flex items-center gap-2.5 p-2.5 bg-zinc-900/60 border border-zinc-850 rounded-lg text-right transition-all select-none">
+                            <span class="checkbox-indicator w-4 h-4 rounded border border-zinc-700 flex items-center justify-center shrink-0 text-black font-extrabold text-[10px]">✔</span>
+                            <span class="text-xs font-medium text-zinc-200" data-injury-label="knees">ברכיים / רצועות / צולבת</span>
+                        </button>
+                        <button type="button" data-injury="elbows" class="checkbox-btn flex items-center gap-2.5 p-2.5 bg-zinc-900/60 border border-zinc-850 rounded-lg text-right transition-all select-none">
+                            <span class="checkbox-indicator w-4 h-4 rounded border border-zinc-700 flex items-center justify-center shrink-0 text-black font-extrabold text-[10px]">✔</span>
+                            <span class="text-xs font-medium text-zinc-200" data-injury-label="elbows">מרפקים / שורש כף יד</span>
+                        </button>
+                        <button type="button" id="no-injury-btn" class="checkbox-btn col-span-2 flex items-center gap-2.5 p-2.5 bg-zinc-900/60 border border-zinc-850 rounded-lg text-right transition-all select-none">
+                            <span class="checkbox-indicator w-4 h-4 rounded border border-zinc-700 flex items-center justify-center shrink-0 text-black font-extrabold text-[10px]">✔</span>
+                            <span class="text-xs font-bold text-zinc-200" id="label-injuries-none">אין מגבלות מיוחדות 👌</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Free text injury detail -->
+                    <div class="space-y-1.5 pt-1">
+                        <label class="block text-xs font-semibold text-lime-400" for="input-injury-detail" id="label-injuries-detail">
+                            פירוט מדויק של הפציעה או המגבלה:
+                        </label>
+                        <textarea id="input-injury-detail" rows="2" 
+                            placeholder="פרט כאן במדויק: לדוגמה 'קרע ברצועה צולבת בברך', 'קרע במיניסקוס', 'פריצת דיסק L4-L5', ניתוחים קודמים או הנחיות מרופא..." 
+                            class="w-full bg-zinc-900 border border-zinc-750 rounded-xl py-2 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- Personal note for injuries -->
+                    <div class="pt-1">
+                        <textarea id="note-injuries" rows="1" placeholder="הערה אישית נוספת לגבי תנועות שגורמות לך לכאב (אופציונלי)..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-1.5 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- 8. Equipment (2 Options Only: חדר כושר / משקל גוף) -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-equipment-question">8. ציוד זמין לאימון:</label>
+                    <div class="grid grid-cols-1 gap-2.5" id="equipment-options-container">
+                        <button type="button" data-field="equipment" data-value="gym" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none cursor-pointer">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="building-2" class="w-4 h-4 text-zinc-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="gym">חדר כושר מלא ומאובזר</span>
+                            </div>
+                        </button>
+                        <button type="button" data-field="equipment" data-value="bodyweight" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none cursor-pointer">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="user-round" class="w-4 h-4 text-zinc-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" data-opt-title="bodyweight">משקל גוף בלבד (קליסטניקס)</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Hidden legacy inputs to prevent JavaScript null errors -->
+                    <div id="wrapper-equipment-other" class="hidden">
+                        <input type="text" id="input-equipment-other" class="hidden" value="">
+                    </div>
+                    <div class="hidden">
+                        <textarea id="note-equipment" class="hidden"></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="pt-4">
+                    <button onclick="validateStep2() && nextStep()" class="w-full py-3.5 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        <span id="btn-step2-next-text">המשך לשלב הבא</span>
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= STEP 3: MAIN CHALLENGE ================= -->
+            <div id="step-3" class="step-card hidden space-y-6">
+                <div class="space-y-2">
+                    <h2 id="step-3-title" class="text-2xl font-bold text-white">האתגר המרכזי שלך</h2>
+                    <p id="step-3-subtitle" class="text-sm text-zinc-400">מה הכי תוקע אותך מלהשיג את התוצאות שאתה רוצה?</p>
+                </div>
+
+                <!-- 9. Core Pain Point + Other + Note -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-zinc-200" id="label-challenge-question">9. הקושי הכי גדול שלך כיום באימונים ובתוכניות קודמות:</label>
+                    <div class="grid grid-cols-1 gap-2.5" id="challenge-options-container">
+                        <button type="button" data-field="challenge" data-value="load" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-sm font-semibold text-zinc-200" data-opt-title="load">"אני לא יודע איך לנהל עומסים ולהתקדם במשקלים בלי להיתקע"</span>
+                        </button>
+                        <button type="button" data-field="challenge" data-value="consistency" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-sm font-semibold text-zinc-200" data-opt-title="consistency">"קושי בהתמדה וביצירת שגרה קבועה"</span>
+                        </button>
+                        <button type="button" data-field="challenge" data-value="technique" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-sm font-semibold text-zinc-200" data-opt-title="technique">"חוסר ביטחון בטכניקה ובבחירת התרגילים הנכונים"</span>
+                        </button>
+                        <button type="button" data-field="challenge" data-value="nutrition" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-sm font-semibold text-zinc-200" data-opt-title="nutrition">"קושי לשלב נכון בין התזונה לתוכנית האימונים"</span>
+                        </button>
+                        <button type="button" data-field="challenge" data-value="results" class="option-btn flex items-center gap-3 p-3.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <span class="text-sm font-semibold text-zinc-200" data-opt-title="results">"איטיות בתוצאות וחוסר הבנה למה אני לא מתקדם"</span>
+                        </button>
+                        <!-- Other Button -->
+                        <button type="button" data-field="challenge" data-value="other" class="option-btn flex items-center gap-3 p-3 bg-zinc-900/40 hover:bg-zinc-900 border border-dashed border-zinc-750 rounded-xl text-right transition-all select-none">
+                            <span class="circle-indicator w-4 h-4 rounded-full border border-zinc-700 flex items-center justify-center shrink-0"></span>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-lime-400"></i>
+                                <span class="font-bold text-sm text-zinc-100" id="label-challenge-other">אחר (פרט את האתגר שלך במילים שלך)</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="wrapper-challenge-other" class="hidden pt-1">
+                        <input type="text" id="input-challenge-other" placeholder="פרט כאן את האתגר הייחודי שמעכב אותך..." 
+                            class="w-full bg-zinc-900 border border-lime-500/50 rounded-xl py-2.5 px-3 text-sm text-white placeholder-zinc-600 focus:border-lime-500 transition-all">
+                    </div>
+                    <div class="pt-1">
+                        <textarea id="note-challenge" rows="2" placeholder="מה עוד חשוב ש-Coach Gino יידע על הקושי או המטרות שלך? (אופציונלי)..." 
+                            class="w-full bg-zinc-900/60 border border-zinc-850 rounded-lg py-2 px-3 text-xs text-white placeholder-zinc-600 focus:border-lime-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="pt-4">
+                    <button onclick="validateStep3() && nextStep()" class="w-full py-3.5 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        <span id="btn-step3-next-text">השלם אבחון ועבור לתוצאות</span>
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= STEP 4: LEAD CAPTURE GATE & COMPLIANCE ================= -->
+            <div id="step-4" class="step-card hidden space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 mx-auto bg-lime-500/10 rounded-full flex items-center justify-center border border-lime-500/25">
+                        <i data-lucide="check-circle-2" class="w-8 h-8 text-lime-400 animate-bounce"></i>
+                    </div>
+                    <h2 id="step-4-title" class="text-2xl font-bold text-white">האבחון הושלם! ⚡</h2>
+                    <p id="step-4-subtitle" class="text-sm text-zinc-400">לאן לשלוח לך את התוצאות וההתאמה האישית?</p>
+                </div>
+
+                <!-- Lead Form -->
+                <div class="space-y-4 pt-2">
+                    <!-- Full Name -->
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-medium text-zinc-200" for="lead-name">שם מלא <span class="text-lime-400">*</span></label>
+                        <div class="relative">
+                            <input type="text" id="lead-name" placeholder="ישראל ישראלי" required
+                                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 pr-11 text-white placeholder-zinc-650 focus:border-lime-500 transition-all text-right">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-zinc-500">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <span id="name-error" class="text-xs text-red-500 hidden">שדה חובה: נא להזין שם מלא</span>
+                    </div>
+
+                    <!-- Phone Number / Whatsapp -->
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-medium text-zinc-200" for="lead-phone">מספר טלפון / וואטסאפ <span class="text-lime-400">*</span></label>
+                        <div class="relative">
+                            <input type="tel" id="lead-phone" placeholder="לדוגמה: 0521234567" required
+                                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 pr-11 text-white placeholder-zinc-650 focus:border-lime-500 transition-all text-left" dir="ltr">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-zinc-500">
+                                <i data-lucide="phone" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <span id="phone-error" class="text-xs text-red-500 hidden">שדה חובה: נא להזין מספר טלפון ישראלי תקין</span>
+                    </div>
+
+                    <!-- Instagram Username -->
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-medium text-zinc-200" for="lead-instagram">שם משתמש באינסטגרם <span class="text-zinc-500 text-xs">(אופציונלי)</span></label>
+                        <div class="relative">
+                            <input type="text" id="lead-instagram" placeholder="your_username" 
+                                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 pr-11 text-white placeholder-zinc-650 focus:border-lime-500 transition-all text-left" dir="ltr">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-zinc-500">
+                                <i data-lucide="instagram" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compliance Checkbox (Anti Spam Gate - Required) -->
+                    <div class="flex items-start gap-2.5 pt-1">
+                        <input type="checkbox" id="lead-compliance" class="w-4.5 h-4.5 rounded border-zinc-800 bg-zinc-900 text-lime-500 focus:ring-lime-500/20 focus:ring-1 mt-0.5 cursor-pointer accent-lime-500 shrink-0">
+                        <label for="lead-compliance" class="text-[11px] text-zinc-400 leading-relaxed cursor-pointer select-none">
+                            <span id="label-lead-compliance-text">אני מאשר קבלת תוכן מקצועי, עדכונים והצעות שיווקיות מ-Coach Gino בוואטסאפ ובאינסטגרם בהתאם לתנאי השימוש ומדיניות הפרטיות.</span>
+                        </label>
+                    </div>
+                    <span id="compliance-error" class="text-xs text-red-500 hidden">שדה חובה: יש לאשר את תנאי הדיוור והפרטיות להמשך</span>
+                </div>
+
+                <!-- Action Button -->
+                <div class="pt-2">
+                    <button onclick="submitLead()" class="w-full py-4 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-extrabold text-base rounded-xl shadow-lg shadow-lime-500/10 transition-all flex items-center justify-center gap-2">
+                        <span id="btn-step4-submit-text">הפק לי תוכנית אימונים מותאמת אישית ⚡</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= STEP 5: LOADING/PROCESSING AI SCREEN ================= -->
+            <div id="step-5" class="step-card hidden flex flex-col justify-center items-center py-12 space-y-8">
+                <div class="relative w-24 h-24 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-4 border-zinc-900 border-t-lime-500 animate-spin"></div>
+                    <div class="w-16 h-16 bg-lime-500/10 rounded-full flex items-center justify-center border border-lime-500/30 neon-pulse-element">
+                        <i data-lucide="cpu" class="w-8 h-8 text-lime-400"></i>
+                    </div>
+                </div>
+
+                <div class="text-center space-y-3 max-w-xs">
+                    <h3 class="text-xl font-bold text-white">מנתח את הנתונים שלך...</h3>
+                    <p id="loading-text" class="text-sm text-zinc-400 h-8 transition-opacity duration-300">
+                        מבצע סריקה ביומכנית מלאה של פציעות ומגבלות גוף...
+                    </p>
+                </div>
+
+                <div class="w-48 bg-zinc-900 h-1 rounded-full overflow-hidden">
+                    <div id="loading-inner-bar" class="h-full bg-lime-500 w-0 transition-all duration-[3000ms] ease-out"></div>
+                </div>
+            </div>
+
+            <!-- ================= STEP CONSULTATION: INJURY DIRECT COACH ACCESS ================= -->
+            <div id="step-consultation" class="step-card hidden space-y-6">
+                <!-- Header -->
+                <div id="consultation-header-box" class="bg-gradient-to-l from-red-500/15 to-transparent p-4 rounded-xl border-r-4 border-red-500 space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span id="consultation-header-icon-container">
+                            <i data-lucide="shield-alert" id="consultation-header-icon" class="w-5 h-5 text-red-400"></i>
+                        </span>
+                        <h2 id="consultation-header-title" class="text-base sm:text-lg font-black text-white">אובחנה מגבלה פיזית הדורשת התייחסות אישית 🩺</h2>
+                    </div>
+                    <p id="consultation-header-subtitle" class="text-xs text-zinc-400">הבריאות והבטיחות שלך הן הדבר החשוב ביותר. הנה ההמלצה המקצועית של Coach Gino:</p>
+                </div>
+
+                <!-- Coach Gino Message Card -->
+                <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 space-y-4 relative overflow-hidden">
+                    <div class="flex items-center gap-3 border-b border-zinc-850 pb-3">
+                        <div id="consultation-avatar-box" class="w-12 h-12 rounded-full bg-lime-500/10 border border-lime-500/30 flex items-center justify-center text-lime-400 font-bold shrink-0">
+                            <span id="consultation-coach-icon-container">
+                                <i data-lucide="stethoscope" id="consultation-coach-icon" class="w-6 h-6"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="font-extrabold text-sm text-white block">Coach Gino (אורי ג'ינו)</span>
+                            <span class="text-xs text-lime-400 font-semibold">מאמן כושר ומומחה לביומכניקה ותנועה</span>
+                        </div>
+                    </div>
+
+                    <!-- Exact User Quote Box -->
+                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-zinc-850/80 space-y-2">
+                        <i data-lucide="quote" class="w-5 h-5 text-lime-400/40"></i>
+                        <p id="consultation-quote-display" class="text-xs sm:text-sm text-zinc-200 font-medium leading-relaxed">
+                            "זה נכון שהשאלון שלי מתאים לכל סוגי המתאמנים אך מגבלות פיזיות ופציעות הן עניין רציני ודורשות התייחסות מיוחדת ומקצועית בכדי לא להשאיר מקום לספק , קבע איתי שיחת יעוץ (זה בחינם לגמרי)."
+                        </p>
+                    </div>
+
+                    <!-- Limitations Summary -->
+                    <div class="space-y-1.5 text-xs">
+                        <span id="consultation-summary-label" class="text-zinc-500 block font-medium">המגבלות שציינת בשאלון:</span>
+                        <div id="consultation-injury-summary" class="bg-zinc-950/50 p-2.5 rounded-lg border border-zinc-900 text-zinc-300 font-semibold">
+                            -
+                        </div>
+                    </div>
+
+                    <p id="consultation-desc-text" class="text-[11px] text-zinc-400 leading-relaxed">
+                        בשיחה קצרה ואישית של 10 דקות נעבור יחד על הפציעה, נבין בדיוק מה מותר ומה אסור לעשות, ונתאים לך מתווה אימונים בטוח שיקדם אותך מבלי לפגוע במפרקים.
+                    </p>
+
+                    <!-- Direct WhatsApp Button -->
+                    <div class="pt-2">
+                        <a id="consultation-whatsapp-link" href="#" target="_blank" class="w-full py-4 px-5 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-extrabold text-xs sm:text-sm rounded-xl shadow-lg shadow-lime-500/20 transition-all flex items-center justify-center gap-2">
+                            <span id="consultation-btn-text">קבע איתי שיחת ייעוץ אישית בוואטסאפ (בחינם לגמרי) 🚀</span>
+                            <i data-lucide="message-circle" class="w-4 h-4 shrink-0"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-[11px] text-zinc-500">שיחת הייעוץ ללא שום עלות או התחייבות • 100% דיסקרטיות ומקצועיות</p>
+                </div>
+            </div>
+
+            <!-- ================= STEP 6: AI RESULTS SCREEN & UPSELL (FOR UNINJURED TRAINEES) ================= -->
+            <div id="step-6" class="step-card hidden space-y-6">
+                <!-- Success Header -->
+                <div class="bg-gradient-to-l from-lime-500/10 to-transparent p-4 rounded-xl border-r-4 border-lime-500">
+                    <h2 class="text-xl font-black text-white" id="results-headline-display">תוכנית האימונים שלך מוכנה! 🎉</h2>
+                    <p class="text-xs text-zinc-400 mt-1" id="results-subheadline-display">תוכנית מותאמת אישית ברמת דיוק ביומכנית גבוהה שנבנתה על ידי Coach Gino:</p>
+                </div>
+
+                <!-- Medical & Biomechanical Alert Box (If needed) -->
+                <div id="medical-alert-box" class="hidden p-4 rounded-xl border border-red-500/60 bg-red-950/20 text-xs space-y-2 medical-alert-pulse">
+                </div>
+
+                <!-- Tab Switching Panel -->
+                <div class="flex border-b border-zinc-900 bg-zinc-900/20 rounded-lg p-0.5">
+                    <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="flex-1 py-2 text-center text-xs font-bold rounded-md bg-lime-500 text-black transition-all">
+                        סקירה כללית
+                    </button>
+                    <button onclick="switchTab('tab-exercises')" id="btn-tab-exercises" class="flex-1 py-2 text-center text-xs font-bold rounded-md text-zinc-400 hover:text-white transition-all">
+                        תוכנית האימונים
+                    </button>
+                    <button onclick="switchTab('tab-guidelines')" id="btn-tab-guidelines" class="flex-1 py-2 text-center text-xs font-bold rounded-md text-zinc-400 hover:text-white transition-all">
+                        חוקי התקדמות
+                    </button>
+                </div>
+
+                <!-- Tab Content Area -->
+                <div class="bg-zinc-900/40 border border-zinc-900/80 rounded-2xl p-4 min-h-[300px]">
+                    
+                    <!-- TAB 1: OVERVIEW -->
+                    <div id="tab-overview" class="tab-content space-y-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">מין וגיל:</span>
+                                <span id="summary-gender-age" class="font-bold text-zinc-200">-</span>
+                            </div>
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">גובה ומשקל:</span>
+                                <span id="summary-height-weight" class="font-bold text-zinc-200">-</span>
+                            </div>
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">מדד מסת גוף (BMI):</span>
+                                <span id="summary-bmi" class="font-bold text-lime-400">-</span>
+                            </div>
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">מטרת על:</span>
+                                <span id="summary-goal" class="font-bold text-zinc-200">-</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">תדירות / חלוקה:</span>
+                                <span id="summary-split" class="font-bold text-zinc-200">-</span>
+                            </div>
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">ציוד זמין:</span>
+                                <span id="summary-equip" class="font-bold text-zinc-200">-</span>
+                            </div>
+                            <div class="bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/50">
+                                <span class="text-zinc-500 block">מגבלות גופניות:</span>
+                                <span id="summary-injuries" class="font-bold text-lime-400">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Personal Notes Summary Display -->
+                        <div id="summary-personal-notes" class="hidden p-3 bg-zinc-950/80 border border-zinc-850 rounded-xl space-y-1.5 text-xs">
+                            <span class="text-lime-400 font-bold block flex items-center gap-1">
+                                <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                                דגשים אישיים שהוספת בשאלון:
+                            </span>
+                            <div id="summary-notes-content" class="text-zinc-300 leading-relaxed space-y-1 text-[11px]"></div>
+                        </div>
+
+                        <!-- Coach Gino Personalized Message Box (Configured per plan or in CMS) -->
+                        <div id="results-custom-message-box" class="hidden p-3.5 bg-lime-950/25 border border-lime-500/35 rounded-xl space-y-1.5 text-xs">
+                            <span class="text-lime-400 font-extrabold text-xs flex items-center gap-1.5">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                <span id="results-custom-message-title">פנייה והתאמה אישית מאת Coach Gino:</span>
+                            </span>
+                            <div id="results-custom-message-content" class="text-zinc-200 text-xs leading-relaxed space-y-1"></div>
+                        </div>
+
+                        <div class="border-t border-zinc-900 pt-3">
+                            <h4 class="font-bold text-sm text-lime-400 mb-1 flex items-center gap-1.5">
+                                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                                ניתוח ביומכני ומענה לאתגר המרכזי שלך:
+                            </h4>
+                            <p id="result-challenge-response" class="text-xs text-zinc-300 leading-relaxed text-justify">
+                                טוען ניתוח...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: EXERCISES -->
+                    <div id="tab-exercises" class="tab-content hidden space-y-4">
+                        <div id="result-workout-plan" class="space-y-4 text-xs">
+                            טוען תוכנית תרגילים...
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: PROGRESSIVE OVERLOAD -->
+                    <div id="tab-guidelines" class="tab-content hidden space-y-4">
+                        <h4 class="font-bold text-sm text-lime-400 mb-2 flex items-center gap-1.5">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                            חוקי ברזל להתקדמות פרוגרסיבית
+                        </h4>
+                        <div id="result-guidelines" class="space-y-3 text-xs leading-relaxed text-zinc-300">
+                            טוען כללי מפתח...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons: Download PDF & Copy Program -->
+                <div class="space-y-2.5">
+                    <button type="button" onclick="downloadPlanPDF()" id="btn-download-pdf" class="w-full py-3.5 bg-gradient-to-r from-lime-500 to-lime-400 hover:from-lime-400 hover:to-lime-300 active:scale-[0.98] text-black font-black text-sm rounded-xl shadow-lg shadow-lime-500/20 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="file-down" id="download-pdf-icon" class="w-4 h-4"></i>
+                        <span id="btn-download-pdf-text">הורד תוכנית אימונים כקובץ PDF 📥</span>
+                    </button>
+                    <button type="button" onclick="copyToClipboard()" class="w-full py-3 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 active:scale-[0.98] text-zinc-200 hover:text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="copy" id="copy-icon" class="w-3.5 h-3.5 text-lime-400"></i>
+                        <span id="copy-text">העתק תוכנית אימונים מלאה 📋</span>
+                    </button>
+                </div>
+
+                <!-- ================= UPSELL / CONVERSION CARD ================= -->
+                <div class="bg-gradient-to-b from-zinc-900/80 to-zinc-950 border border-lime-500/30 rounded-2xl p-5 text-center space-y-4 relative overflow-hidden neon-glow-green">
+                    <div class="absolute -top-10 -left-10 w-24 h-24 bg-lime-500/5 rounded-full blur-xl"></div>
+                    <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-lime-500/5 rounded-full blur-xl"></div>
+                    
+                    <div class="space-y-2">
+                        <h3 class="text-base font-extrabold text-white leading-tight">
+                            <span id="upsell-title-display">יש לך תוכנית מעולה ביד.</span><br>
+                            <span id="upsell-subtitle-display" class="text-lime-400 text-sm font-bold block mt-1">עכשיו, איך מוודאים שאתה לא נתקע?</span>
+                        </h3>
+                        <p id="upsell-body-display" class="text-xs text-zinc-400 leading-relaxed max-w-xs mx-auto">
+                            תוכנית אימונים טובה היא התחלה. כדי לייצר התקדמות אמיתית לאורך זמן צריך לדעת לנהל עומסים נכון, לדייק את הטכניקה ולפתח שגרת תזונה עצמאית ומדויקת , הגיע הזמן להפסיק לנחש ולהיות תלוי באוויר.
+                        </p>
+                    </div>
+
+                    <div class="pt-1">
+                        <a id="whatsapp-link" href="#" target="_blank" class="w-full py-4 px-6 bg-lime-500 hover:bg-lime-600 active:scale-[0.98] text-black font-extrabold text-sm rounded-xl shadow-lg shadow-lime-500/20 transition-all flex items-center justify-center gap-2">
+                            <span id="upsell-whatsapp-btn-text">קבע איתי שיחת התאמה אישית בוואטסאפ 🚀</span>
+                            <i data-lucide="message-circle" class="w-4 h-4 shrink-0"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Footer: Fixed brand watermark -->
+        <footer class="p-4 text-center border-t border-zinc-900/50 bg-zinc-950 text-xs text-zinc-500 mt-auto flex flex-col items-center justify-center gap-1.5">
+            <div>כל הזכויות שמורות © Coach Gino 2026</div>
+            <a id="footer-instagram-link" href="https://www.instagram.com/coach.gino1" target="_blank" class="text-lime-450 hover:text-lime-300 font-bold transition-colors flex items-center gap-1 text-[11px]">
+                <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
+                <span id="footer-instagram-handle">@coach.gino1</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- ================= MODALS & MASTER ADMIN CMS ================= -->
+
+    <!-- 1. Admin Password Entry Modal (Triggered by 3 clicks on ⚡) -->
+    <div id="admin-password-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-xs p-6 space-y-4 shadow-2xl relative">
+            <h3 class="text-sm font-bold text-white text-center flex items-center justify-center gap-2">
+                <i data-lucide="lock" class="w-4 h-4 text-lime-400"></i>
+                כניסת מנהל מערכת - Coach Gino
+            </h3>
+            <div class="space-y-1">
+                <label for="admin-password-input" class="text-[11px] text-zinc-400 block">הזן סיסמת מנהל:</label>
+                <input type="password" id="admin-password-input" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-3 text-center text-xs text-white placeholder-zinc-700 tracking-wider focus:border-lime-500 transition-all">
+                <span id="admin-login-error" class="text-[10px] text-red-500 hidden text-center block mt-1">סיסמה שגויה, נסה שנית.</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="submitAdminPassword()" class="flex-1 py-2.5 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-xl transition-all">כניסה</button>
+                <button onclick="closeAdminPasswordModal()" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-xl transition-all">ביטול</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Master Admin CMS & CRM Dashboard Overlay -->
+    <div id="admin-dashboard-modal" class="hidden fixed inset-0 z-[90] bg-zinc-950 text-zinc-50 flex flex-col p-3 md:p-6 overflow-y-auto">
+        <div class="w-full max-w-5xl mx-auto flex-grow flex flex-col space-y-5 py-2">
+            
+            <!-- Dashboard Top Header -->
+            <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-lime-500/10 border border-lime-500/20 flex items-center justify-center text-lime-400">
+                        <i data-lucide="shield" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span>Coach Gino Master Control</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-lime-500/10 text-lime-400 border border-lime-500/20">CMS & CRM PRO</span>
+                        </h2>
+                        <p class="text-xs text-zinc-400">שליטה אבסולוטית על לידים, זמני גלישה ונטישות, מאגר תרגילים וכל התוכן הקיים באתר</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminDashboard()" class="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>יציאה</span>
+                </button>
+            </div>
+
+            <!-- Master Tabs Navigation -->
+            <div class="flex gap-2 border-b border-zinc-900 pb-2 overflow-x-auto text-xs font-bold">
+                <button onclick="switchAdminTab('admin-leads-tab')" id="btn-admin-leads-tab" class="py-2 px-4 rounded-lg bg-lime-500 text-black flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>לידים מלאים (CRM)</span>
+                    <span id="badge-leads-count" class="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]">0</span>
+                </button>
+                <button onclick="switchAdminTab('admin-sessions-tab')" id="btn-admin-sessions-tab" class="py-2 px-4 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="timer" class="w-4 h-4"></i>
+                    <span>זמני גלישה ונטישות (Cookies)</span>
+                    <span id="badge-sessions-count" class="px-1.5 py-0.2 rounded-full bg-zinc-800 text-[10px]">0</span>
+                </button>
+                <button onclick="switchAdminTab('admin-questionnaire-tab')" id="btn-admin-questionnaire-tab" class="py-2 px-4 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                    <span>עריכת השאלון (Questionnaire CMS)</span>
+                </button>
+                <button onclick="switchAdminTab('admin-cms-tab')" id="btn-admin-cms-tab" class="py-2 px-4 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                    <span>מאגר תרגילים</span>
+                </button>
+                <button onclick="switchAdminTab('admin-settings-tab')" id="btn-admin-settings-tab" class="py-2 px-4 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                    <span>שליטת תוכן אבסולוטית (CMS Content)</span>
+                </button>
+                <button onclick="switchAdminTab('admin-plans-tab')" id="btn-admin-plans-tab" class="py-2 px-4 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-2 shrink-0 transition-all">
+                    <i data-lucide="layers" class="w-4 h-4 text-lime-400"></i>
+                    <span>תוכניות אימון (Workout Plans)</span>
+                    <span id="badge-plans-count" class="px-1.5 py-0.2 rounded-full bg-zinc-800 text-[10px]">0</span>
+                </button>
+            </div>
+
+            <!-- ================= TAB 1: CRM LEADS ================= -->
+            <div id="admin-leads-tab" class="admin-tab-content space-y-4">
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div>
+                            <span class="text-zinc-500 text-[11px] block">סה"כ לידים מלאים</span>
+                            <span id="admin-total-leads" class="text-xl font-bold text-white">0</span>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-lime-500/10 flex items-center justify-center text-lime-400">
+                            <i data-lucide="user-check" class="w-4.5 h-4.5"></i>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div>
+                            <span class="text-zinc-500 text-[11px] block">אישרו דיוור (ספאם)</span>
+                            <span id="admin-approved-mailing" class="text-xl font-bold text-white">0</span>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-lime-500/10 flex items-center justify-center text-lime-400">
+                            <i data-lucide="check-square" class="w-4.5 h-4.5"></i>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div class="flex flex-col gap-1 w-full">
+                            <span class="text-zinc-500 text-[11px] block">חיפוש ליד</span>
+                            <input type="text" id="admin-search-input" placeholder="חפש לפי שם או טלפון..." oninput="renderAdminLeads()" 
+                                class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-zinc-700 w-full focus:border-lime-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Controls -->
+                <div class="flex flex-wrap gap-2 justify-between items-center bg-zinc-900/20 p-3 rounded-xl border border-zinc-900">
+                    <div class="text-xs text-zinc-400 font-semibold">ייצוא וניהול נתונים:</div>
+                    <div class="flex gap-2">
+                        <button onclick="exportToCSV()" class="py-1.5 px-3 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 rounded-lg text-xs font-bold transition-all text-lime-450 flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>ייצוא ל-CSV (אקסל)</span>
+                        </button>
+                        <button onclick="clearAllLeads()" class="py-1.5 px-3 bg-red-950/30 hover:bg-red-950/50 border border-red-900/60 rounded-lg text-xs font-bold transition-all text-red-400 flex items-center gap-1.5">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            <span>מחק את כל הלידים</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table of Leads -->
+                <div class="border border-zinc-900 rounded-xl overflow-hidden bg-zinc-900/10">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs responsive-admin-table">
+                            <thead class="bg-zinc-900/80 text-zinc-400 font-bold border-b border-zinc-800">
+                                <tr>
+                                    <th class="p-3">תאריך</th>
+                                    <th class="p-3">שם מלא</th>
+                                    <th class="p-3">טלפון / וואטסאפ</th>
+                                    <th class="p-3">אינסטגרם</th>
+                                    <th class="p-3">סוג ליד</th>
+                                    <th class="p-3">זמן גלישה</th>
+                                    <th class="p-3 text-center">פעולות</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-leads-tbody" class="divide-y divide-zinc-900">
+                                <!-- Populated in JS -->
+                            </tbody>
+                        </table>
+                        <div id="no-leads-message" class="hidden p-8 text-center text-zinc-500 text-sm">
+                            <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                            אין לידים רשומים במערכת כרגע.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: SESSIONS & ABANDONMENT (COOKIES) ================= -->
+            <div id="admin-sessions-tab" class="admin-tab-content hidden space-y-4">
+                <div class="bg-gradient-to-l from-lime-500/10 to-transparent p-3.5 rounded-xl border-r-4 border-lime-500 text-xs">
+                    <span class="font-bold text-white block">מעקב גלישה ונטישות בזמן אמת (Cookies Tracking):</span>
+                    <span class="text-zinc-400">כאן מתועדים כל המבקרים באתר לפי מזהה עוגייה, כולל משתמשים שהתחילו למלא את השאלון ונטשו לפני שליחת שער הליד.</span>
+                </div>
+
+                <!-- Abandonment Stats -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div>
+                            <span class="text-zinc-500 text-[11px] block">סה"כ סשנים נמדדו</span>
+                            <span id="admin-total-sessions" class="text-xl font-bold text-white">0</span>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+                            <i data-lucide="activity" class="w-4.5 h-4.5"></i>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div>
+                            <span class="text-zinc-500 text-[11px] block">הושלמו (Converted)</span>
+                            <span id="admin-converted-sessions" class="text-xl font-bold text-lime-400">0</span>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-lime-500/10 flex items-center justify-center text-lime-400">
+                            <i data-lucide="check-circle" class="w-4.5 h-4.5"></i>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/40 border border-zinc-900 rounded-xl p-3.5 flex items-center justify-between">
+                        <div>
+                            <span class="text-zinc-500 text-[11px] block">נטישות באמצע (Drop-offs)</span>
+                            <span id="admin-abandoned-sessions" class="text-xl font-bold text-orange-400">0</span>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400">
+                            <i data-lucide="user-x" class="w-4.5 h-4.5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sessions Table -->
+                <div class="border border-zinc-900 rounded-xl overflow-hidden bg-zinc-900/10">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs responsive-admin-table">
+                            <thead class="bg-zinc-900/80 text-zinc-400 font-bold border-b border-zinc-800">
+                                <tr>
+                                    <th class="p-3">מזהה סשן (Cookie)</th>
+                                    <th class="p-3">שעת כניסה</th>
+                                    <th class="p-3">זמן שהייה באתר</th>
+                                    <th class="p-3">שלב אחרון שבוקר</th>
+                                    <th class="p-3">סטטוס</th>
+                                    <th class="p-3 text-center">נתונים שמולאו</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-sessions-tbody" class="divide-y divide-zinc-900">
+                                <!-- Populated in JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB: QUESTIONNAIRE CMS ================= -->
+            <div id="admin-questionnaire-tab" class="admin-tab-content hidden space-y-5">
+                <!-- Top Header & Actions -->
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-zinc-900/40 p-4 rounded-xl border border-zinc-900">
+                    <div>
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="clipboard-list" class="w-4 h-4 text-lime-400"></i>
+                            <span>שליטה מלאה ועריכת כל השאלון (Questionnaire CMS)</span>
+                        </h4>
+                        <p class="text-xs text-zinc-400 mt-0.5">עריכה מלאה של כותרות השלבים, כל השאלות, אפשרויות הבחירה, ההסברים וההערות בשאלון.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="saveAdminQuestionnaire()" class="py-2 px-4 bg-lime-500 hover:bg-lime-600 text-black font-extrabold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/20 flex items-center gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            <span>שמור שינויים בשאלון</span>
+                        </button>
+                        <button onclick="resetQuestionnaireToDefaults()" class="py-2 px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-all flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span>איפוס לברירת מחדל</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gender Switcher Bar for Questionnaire CMS -->
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-zinc-950/70 p-3 rounded-xl border border-zinc-850">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-zinc-300">בחר נוסח לעריכה:</span>
+                        <div class="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-800">
+                            <button type="button" id="btn-admin-qc-gender-male" onclick="switchAdminQuestionnaireGender('male')" class="py-1.5 px-4 rounded-lg bg-lime-500 text-black font-extrabold text-xs flex items-center gap-2 transition-all">
+                                <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                <span>נוסח לשאלון גבר ♂️</span>
+                            </button>
+                            <button type="button" id="btn-admin-qc-gender-female" onclick="switchAdminQuestionnaireGender('female')" class="py-1.5 px-4 rounded-lg text-zinc-400 hover:text-white font-extrabold text-xs flex items-center gap-2 transition-all">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
+                                <span>נוסח לשאלון אישה ♀️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-[11px] font-semibold text-zinc-400" id="admin-qc-gender-indicator">
+                        נוסח פעיל לעריכה: <span class="text-lime-400 font-bold">גבר ♂️</span>
+                    </div>
+                </div>
+
+                <!-- Editor Form Content Area -->
+                <div id="admin-questionnaire-editor-container" class="space-y-4">
+                    <!-- Populated dynamically by JS (renderAdminQuestionnaireEditor) -->
+                </div>
+
+                <!-- Bottom Save Button -->
+                <div class="pt-2">
+                    <button onclick="saveAdminQuestionnaire()" class="w-full py-3.5 bg-lime-500 hover:bg-lime-600 text-black font-extrabold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/20 flex items-center justify-center gap-1.5">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>שמור ועדכן את כל השאלון עכשיו</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: EXERCISE BANK CMS ================= -->
+            <div id="admin-cms-tab" class="admin-tab-content hidden space-y-4">
+                <div class="flex flex-wrap gap-2 justify-between items-center bg-zinc-900/30 p-3 rounded-xl border border-zinc-900">
+                    <div class="flex items-center gap-2">
+                        <div>
+                            <h4 class="text-xs font-bold text-white flex items-center gap-2">
+                                <span>מאגר תרגילים ודגשים ביומכניים (Exercise Bank CMS)</span>
+                                <span id="cms-bank-count-badge" class="px-2 py-0.5 rounded-full bg-lime-500/10 text-lime-400 font-mono text-[10px] font-bold border border-lime-500/20">טוען...</span>
+                            </h4>
+                            <p class="text-[11px] text-zinc-400">עריכה וסינון של תרגילים, סרטוני יוטיוב, תמונות הדגמה אישיות ודגשים ביומכניים</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openAddExerciseModal()" class="py-1.5 px-3 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-lg transition-all flex items-center gap-1 shadow-md shadow-lime-500/10">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            <span>הוסף תרגיל חדש</span>
+                        </button>
+                        <button onclick="resetExerciseBankToDefaults()" class="py-1.5 px-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded-lg transition-all flex items-center gap-1" title="אפס למאגר ברירת המחדל">
+                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                            <span>איפוס למאגר המלא</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filters Bar for Exercise Bank -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 bg-zinc-950/80 p-3 rounded-xl border border-zinc-900 text-xs">
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">חיפוש תרגיל לפי שם או דגש:</label>
+                        <input type="text" id="cms-search-input" oninput="renderCmsExercises()" placeholder="חפש תרגיל..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">קבוצת שריר:</label>
+                        <select id="cms-filter-muscle" onchange="renderCmsExercises()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500">
+                            <option value="all">כל קבוצות השרירים</option>
+                            <option value="chest">חזה</option>
+                            <option value="back">גב</option>
+                            <option value="legs">רגליים וישבן</option>
+                            <option value="shoulders">כתפיים</option>
+                            <option value="arms">ידיים (בייספס / טרייספס)</option>
+                            <option value="core">בטן וליבה</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">ציוד נדרש:</label>
+                        <select id="cms-filter-equip" onchange="renderCmsExercises()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500">
+                            <option value="all">כל סוגי הציוד</option>
+                            <option value="gym">חדר כושר</option>
+                            <option value="home">משקולות ביתיות</option>
+                            <option value="bodyweight">משקל גוף</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">בטיחות והתאמה רפואית:</label>
+                        <select id="cms-filter-ban" onchange="renderCmsExercises()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500">
+                            <option value="all">הכל (ללא סינון)</option>
+                            <option value="safe_pregnancy">בטוח להריון 🤰</option>
+                            <option value="safe_acl">בטוח לברכיים / צולבת (ACL)</option>
+                            <option value="safe_back">בטוח לגב / פריצת דיסק</option>
+                            <option value="safe_shoulder">בטוח לפציעת כתף</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CMS Exercise Table -->
+                <div class="border border-zinc-900 rounded-xl overflow-hidden bg-zinc-900/10">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs responsive-admin-table">
+                            <thead class="bg-zinc-900/80 text-zinc-400 font-bold border-b border-zinc-800">
+                                <tr>
+                                    <th class="p-3">שם התרגיל</th>
+                                    <th class="p-3">קבוצת שריר</th>
+                                    <th class="p-3">ציוד</th>
+                                    <th class="p-3">סטים וחזרות</th>
+                                    <th class="p-3">סרטון / תמונה</th>
+                                    <th class="p-3">הגבלות ביומכניות</th>
+                                    <th class="p-3 text-center">פעולות</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-cms-tbody" class="divide-y divide-zinc-900">
+                                <!-- Populated in JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 4: ABSOLUTE CONTENT CONTROL CMS ================= -->
+            <div id="admin-settings-tab" class="admin-tab-content hidden space-y-4">
+                <div class="bg-zinc-900/40 p-4 rounded-xl border border-zinc-900 space-y-5">
+                    <div class="border-b border-zinc-850 pb-3">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="edit" class="w-4 h-4 text-lime-400"></i>
+                            שליטת תוכן אבסולוטית על כל הטקסטים והמדיה (Full CMS Control)
+                        </h4>
+                        <p class="text-xs text-zinc-400">כאן יש לך שליטה מלאה על 100% מהטקסטים, התמונות וההודעות באפליקציה.</p>
+                    </div>
+
+                    <!-- ================= SECTION 1: COACH AVATAR / PROFILE PICTURE (HOME SCREEN) ================= -->
+                    <div class="space-y-3 bg-zinc-950 p-4 rounded-2xl border-2 border-lime-500/40 shadow-xl">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-850 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-lime-500/15 border border-lime-500/30 flex items-center justify-center text-lime-400">
+                                    <i data-lucide="camera" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-white flex items-center gap-2">
+                                        תמונת פרופיל / לוגו של מסך הבית (Coach Avatar)
+                                    </h4>
+                                    <p class="text-xs text-zinc-400">הגדר את התמונה שתופיע בעיגול בדף הפתיחה (במקום סמל המשקולת)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center gap-5 pt-1">
+                            <!-- Preview Circle -->
+                            <div class="flex flex-col items-center gap-2 shrink-0">
+                                <div class="relative w-20 h-20 rounded-full overflow-hidden bg-zinc-900 border-2 border-lime-500 flex items-center justify-center neon-glow-green shadow-xl">
+                                    <div id="admin-avatar-preview-placeholder" class="text-lime-400 flex items-center justify-center">
+                                        <i data-lucide="dumbbell" class="w-10 h-10"></i>
+                                    </div>
+                                    <img id="admin-avatar-preview-img" src="" alt="Coach Avatar" class="hidden w-full h-full object-cover rounded-full" />
+                                </div>
+                                <span class="text-[10px] text-zinc-400 font-semibold">תצוגה מקדימה</span>
+                            </div>
+
+                            <!-- Controls & Description -->
+                            <div class="space-y-3 flex-grow text-right w-full sm:w-auto">
+                                <div class="bg-zinc-900/60 p-3 rounded-xl border border-zinc-850 text-xs text-zinc-300 leading-relaxed">
+                                    בלחיצה על <strong>"העלה תמונה חדשה וחתוך"</strong> תוכל לבחור תמונה מהמכשיר שלך. מיד ייפתח מסך עריכה שבו תוכל:
+                                    <ul class="list-disc list-inside text-zinc-400 text-[11px] mt-1 space-y-0.5">
+                                        <li>להגדיל / להקטין עם סליידר זום או גלגלת</li>
+                                        <li>לגרור ולהזיז את התמונה בדיוק למרכז העיגול</li>
+                                        <li>לסובב 90° לפי הצורך</li>
+                                    </ul>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2.5">
+                                    <button type="button" onclick="triggerCoachAvatarUpload()" class="py-2.5 px-4 bg-lime-500 hover:bg-lime-600 text-black font-black text-xs rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-lime-500/20 cursor-pointer">
+                                        <i data-lucide="upload" class="w-4 h-4"></i>
+                                        <span>העלה תמונה חדשה וחתוך 📸</span>
+                                    </button>
+                                    <button type="button" id="btn-admin-realign-avatar" onclick="openCropperWithExistingAvatar()" class="hidden py-2.5 px-3.5 bg-zinc-800 hover:bg-zinc-750 text-white font-bold text-xs rounded-xl border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i data-lucide="crop" class="w-4 h-4 text-lime-400"></i>
+                                        <span>התאם וחתוך מחדש ✂️</span>
+                                    </button>
+                                    <button type="button" id="btn-admin-remove-avatar" onclick="removeCoachAvatar()" class="hidden py-2.5 px-3.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        <span>הסר תמונה (חזור למשקולת) 🗑️</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden File Input for Avatar Upload -->
+                        <input type="file" id="coach-avatar-input" accept="image/*" class="hidden" onchange="handleCoachAvatarSelected(event)">
+                    </div>
+
+                    <!-- ================= SECTION 2: FULL HOME SCREEN / LANDING PAGE TEXTS ================= -->
+                    <div class="space-y-4 bg-zinc-950/80 p-4 rounded-2xl border border-zinc-850 text-xs">
+                        <div class="border-b border-zinc-850 pb-2.5 flex items-center justify-between">
+                            <h5 class="font-black text-sm text-white flex items-center gap-2">
+                                <i data-lucide="layout" class="w-4 h-4 text-lime-400"></i>
+                                <span>עריכת כל הטקסטים של עמוד הבית (דף הפתיחה)</span>
+                            </h5>
+                            <span class="text-[10px] text-lime-400 bg-lime-500/10 px-2 py-0.5 rounded-full font-bold">100% שליטה בטקסטים</span>
+                        </div>
+
+                        <!-- 1. Top Badge / Chip -->
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px] font-semibold">1. תגית עליונה (מעל הכותרת):</label>
+                            <input type="text" id="cms-landing-badge" placeholder="אבחון כושר מבוסס AI & ביומכניקה" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white">
+                        </div>
+
+                        <!-- 2. Main Headline & Subheadline -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 text-[11px] font-semibold">2. כותרת ראשית בעמוד הבית:</label>
+                                <input type="text" id="cms-landing-headline" placeholder="תוכנית אימונים בשווי מאות שקלים בחינם!" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 text-[11px] font-semibold">3. תת-כותרת (פסקת הסבר מתחת לכותרת):</label>
+                                <textarea id="cms-landing-subheadline" rows="2" placeholder="קבל תוכנית אימונים מקצועית, מעמיקה ומותאמת אישית בתוך 2 דקות, בהתאם למטרות, לציוד ולמבנה הגוף שלך." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white leading-relaxed"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 3. Benefit Bullets (3 Items: Title + Description) -->
+                        <div class="space-y-3 pt-2 border-t border-zinc-900">
+                            <span class="block text-xs font-bold text-zinc-200">4. שלושת כרטיסי היתרונות (Bullets):</span>
+                            
+                            <!-- Bullet 1 -->
+                            <div class="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800 space-y-2">
+                                <div class="text-[11px] font-bold text-lime-400 flex items-center gap-1.5">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                                    <span>יתרון 1:</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">כותרת יתרון 1:</label>
+                                        <input type="text" id="cms-bullet-1-title" placeholder="דיוק ביומכני ומניעת פציעות" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">תיאור יתרון 1:</label>
+                                        <input type="text" id="cms-bullet-1-desc" placeholder="התייחסות אישית למגבלות פיזיות, פציעות עבר ורגישויות." class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bullet 2 -->
+                            <div class="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800 space-y-2">
+                                <div class="text-[11px] font-bold text-lime-400 flex items-center gap-1.5">
+                                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                    <span>יתרון 2:</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">כותרת יתרון 2:</label>
+                                        <input type="text" id="cms-bullet-2-title" placeholder="תוכנית אימונים אישית מלאה" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">תיאור יתרון 2:</label>
+                                        <input type="text" id="cms-bullet-2-desc" placeholder="חלוקת ימים, סטים, חזרות, זמני מנוחה, סרטוני הדגמה ותמונות ביצוע." class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bullet 3 -->
+                            <div class="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800 space-y-2">
+                                <div class="text-[11px] font-bold text-lime-400 flex items-center gap-1.5">
+                                    <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+                                    <span>יתרון 3:</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">כותרת יתרון 3:</label>
+                                        <input type="text" id="cms-bullet-3-title" placeholder="100% שליטה ומגע אישי" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-zinc-400 mb-1">תיאור יתרון 3:</label>
+                                        <input type="text" id="cms-bullet-3-desc" placeholder="הוסף נוסח והערות אישיות משלך בכל שלב של השאלון." class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. CTA Button & Subtext -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-zinc-900">
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 text-[11px] font-semibold">5. כיתוב על כפתור ההתחלה הראשי:</label>
+                                <input type="text" id="cms-landing-btn-text" placeholder="התחל באבחון המהיר" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 text-[11px] font-semibold">6. שורת הסבר מתחת לכפתור:</label>
+                                <input type="text" id="cms-landing-subtext" placeholder="ללא עלות • אבחון של 2 דקות בלבד" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= SECTION 3: GENDER-BASED MESSAGES & QUOTES ================= -->
+                    <div class="border-t border-zinc-800 pt-3">
+                        <div class="mb-3">
+                            <h5 class="font-black text-sm text-white flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-lime-400"></i>
+                                <span>התאמת פנייה אישית לפי מגדר (גבר ♂️ / אישה ♀️)</span>
+                            </h5>
+                            <p class="text-xs text-zinc-400">הגדר נוסחים מותאמים אישית ללשון זכר וללשון נקבה</p>
+                        </div>
+                    </div>
+
+                    <!-- Gender Switcher Bar for Content CMS -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-zinc-950/70 p-3 rounded-xl border border-zinc-850">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-zinc-300">בחר נוסח תוכן:</span>
+                            <div class="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-800">
+                                <button type="button" id="btn-admin-settings-gender-male" onclick="switchAdminSettingsGender('male')" class="py-1.5 px-4 rounded-lg bg-lime-500 text-black font-extrabold text-xs flex items-center gap-2 transition-all">
+                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                    <span>נוסח גבר ♂️</span>
+                                </button>
+                                <button type="button" id="btn-admin-settings-gender-female" onclick="switchAdminSettingsGender('female')" class="py-1.5 px-4 rounded-lg text-zinc-400 hover:text-white font-extrabold text-xs flex items-center gap-2 transition-all">
+                                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
+                                    <span>נוסח אישה ♀️</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-[11px] font-semibold text-zinc-400" id="admin-settings-gender-indicator">
+                            נוסח תוכן פעיל: <span class="text-lime-400 font-bold">גבר ♂️</span>
+                        </div>
+                    </div>
+
+                    <!-- 1. Consultation Message for Injured Trainees -->
+                    <div class="space-y-1.5 bg-zinc-950/80 p-3 rounded-xl border border-zinc-850">
+                        <label class="block text-xs font-bold text-lime-400" for="cms-consultation-quote">
+                            הודעת הפנייה לשיחת ייעוץ עבור בעלי מגבלות ופציעות:
+                        </label>
+                        <textarea id="cms-consultation-quote" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- 1b. Consultation Message for Pregnant Trainees -->
+                    <div class="space-y-1.5 bg-zinc-950/80 p-3 rounded-xl border border-zinc-850">
+                        <label class="block text-xs font-bold text-pink-400" for="cms-pregnancy-consultation-quote">
+                            הודעת הפנייה לשיחת ייעוץ עבור מתאמנות בהריון 🤰:
+                        </label>
+                        <textarea id="cms-pregnancy-consultation-quote" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white leading-relaxed" placeholder="הריון הוא תקופה מיוחדת ומרגשת, אך ישנם סוגי הריונות ודגשים ביומכניים שונים..."></textarea>
+                    </div>
+
+                    <!-- 3. Upsell / Conversion Card Texts -->
+                    <div class="space-y-3 bg-zinc-950/80 p-3 rounded-xl border border-zinc-855">
+                        <h5 class="font-bold text-xs text-white">טקסט כרטיס ההמרה (Upsell Card מתחת לתוכנית):</h5>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">כותרת כרטיס המרה:</label>
+                            <input type="text" id="cms-upsell-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">תת-כותרת כרטיס המרה:</label>
+                            <input type="text" id="cms-upsell-subtitle" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">גוף הטקסט של כרטיס ההמרה:</label>
+                            <textarea id="cms-upsell-body" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white leading-relaxed"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 4. WhatsApp Message Templates -->
+                    <div class="space-y-3 bg-zinc-950/80 p-3 rounded-xl border border-zinc-850">
+                        <h5 class="font-bold text-xs text-white">נוסח הודעות וואטסאפ מוכנות מראש שנשלחות אליך:</h5>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">נוסח הודעת וואטסאפ ממתאמן רגיל (ללא פציעות):</label>
+                            <textarea id="cms-whatsapp-plan" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white"></textarea>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">נוסח הודעת וואטסאפ ממתאמן עם פציעה/מגבלה (שיחת ייעוץ):</label>
+                            <textarea id="cms-whatsapp-consultation" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white"></textarea>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-pink-400 text-[11px]">נוסח הודעת וואטסאפ ממתאמנת בהריון (שיחת ייעוץ 🤰):</label>
+                            <textarea id="cms-whatsapp-pregnancy" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white" placeholder="היי אורי, מילאתי את השאלון שלך וציינתי שאני בהריון..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 5. Default Results Screen Texts ("תוכנית האימון שלך מוכנה") -->
+                    <div class="space-y-3 bg-zinc-950/80 p-3 rounded-xl border border-zinc-850">
+                        <div class="flex items-center justify-between border-b border-zinc-850 pb-2">
+                            <h5 class="font-bold text-xs text-white flex items-center gap-1.5">
+                                <i data-lucide="award" class="w-3.5 h-3.5 text-lime-400"></i>
+                                <span>עריכת מסך "תוכנית האימון שלך מוכנה" (ברירת מחדל כללית):</span>
+                            </h5>
+                            <span class="text-[10px] text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">ניתן להגדיר גם התאמה ספציפית לכל תוכנית בעורך התוכניות</span>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">כותרת ראשית של מסך התוצאה:</label>
+                            <input type="text" id="cms-results-headline" placeholder="תוכנית האימונים שלך מוכנה! 🎉" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">תת-כותרת / פתיח:</label>
+                            <textarea id="cms-results-subheadline" rows="2" placeholder="תוכנית מותאמת אישית ברמת דיוק ביומכנית גבוהה שנבנתה על ידי Coach Gino:" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white"></textarea>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 text-[11px]">הודעת פתיחה אישית כללית מאת Coach Gino (תומך בתגיות: {name}, {goal}, {weight}, {height}):</label>
+                            <textarea id="cms-results-welcome-note" rows="3" placeholder="היי {name}, שמח שבחרת לעשות את הצעד הראשון לקראת {goal}! התוכנית הזו נבנתה במיוחד עבורך..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 7. Contact & Social Info -->
+                    <div class="space-y-3 bg-zinc-950/80 p-3 rounded-xl border border-zinc-850 text-xs">
+                        <h5 class="font-bold text-xs text-white">פרטי התקשרות ואינסטגרם:</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 font-medium">מספר וואטסאפ (פורמט 972...):</label>
+                                <input type="text" id="setting-phone" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white ltr">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-zinc-400 font-medium">שם משתמש אינסטגרם:</label>
+                                <input type="text" id="setting-instagram-handle" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white ltr">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 font-medium">קישור אינסטגרם מלא:</label>
+                            <input type="text" id="setting-instagram-link" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white ltr">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-zinc-400 font-medium">Webhook URL חיצוני (אופציונלי):</label>
+                            <input type="text" id="setting-webhook-url" placeholder="https://..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white ltr">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="saveAllCmsContent()" class="w-full py-3.5 bg-lime-500 hover:bg-lime-600 text-black font-extrabold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/20 flex items-center justify-center gap-1.5">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            <span>שמור את כל התכנים וההגדרות באתר</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 6: WORKOUT PLANS BUILDER ================= -->
+            <div id="admin-plans-tab" class="admin-tab-content hidden space-y-4">
+                <!-- Header Card -->
+                <div class="flex flex-wrap gap-3 justify-between items-center bg-zinc-900/40 p-4 rounded-xl border border-zinc-900">
+                    <div class="space-y-1">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-lime-400"></i>
+                            ניהול ובניית תוכניות אימון מותאמות אישית (Workout Plans Builder)
+                        </h4>
+                        <p class="text-xs text-zinc-400">כאן יש לך שליטה מלאה לבנות תוכניות אימון שלמות (ימי אימון, חלוקות, תרגילים, סטים, חזרות, מנוחות וסרטונים) ולקבוע לאילו תשובות בשאלון כל תוכנית מותאמת.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="openCreatePlanModal()" class="py-2 px-3.5 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 shadow-lg shadow-lime-500/10">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>צור תוכנית אימון חדשה</span>
+                        </button>
+                        <button onclick="exportWorkoutPlansJSON()" class="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-lime-400 border border-lime-500/30 text-xs rounded-lg transition-all flex items-center gap-1.5" title="הורד קובץ גיבוי של כל התוכניות שבנית">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>ייצא גיבוי תוכניות (JSON)</span>
+                        </button>
+                        <button onclick="triggerImportWorkoutPlans()" class="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-blue-400 border border-blue-500/30 text-xs rounded-lg transition-all flex items-center gap-1.5" title="העלה קובץ גיבוי תוכניות כדי לייבא אותן">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                            <span>ייבא גיבוי תוכניות</span>
+                        </button>
+                        <input type="file" id="input-import-plans-json" accept=".json" onchange="handleImportWorkoutPlansFile(event)" class="hidden">
+                        <button onclick="resetWorkoutPlansToDefaults()" class="py-2 px-3 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 text-xs rounded-lg transition-all flex items-center gap-1" title="אפס לתבניות ברירת מחדל של המאמן">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span>איפוס לברירת מחדל</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-zinc-950/80 p-3 rounded-xl border border-zinc-900 text-xs">
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">חיפוש לפי שם תוכנית:</label>
+                        <input type="text" id="admin-plans-search" oninput="renderAdminPlans()" placeholder="חפש לפי שם תוכנית..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">סינון לפי מגדר:</label>
+                        <select id="admin-plans-filter-gender" onchange="renderAdminPlans()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500">
+                            <option value="all">כל המגדרים</option>
+                            <option value="male">גברים</option>
+                            <option value="female">נשים</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">סינון לפי מטרת אימון:</label>
+                        <select id="admin-plans-filter-goal" onchange="renderAdminPlans()" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500">
+                            <option value="all">כל המטרות</option>
+                            <option value="shred">חיטוב וירידה באחוזי שומן</option>
+                            <option value="mass">עלייה במסת שריר</option>
+                            <option value="recomp">חיטוב ושינוי הרכב הגוף</option>
+                            <option value="strength">שיפור כוח</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Plans Cards Grid -->
+                <div id="admin-plans-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Populated in JS -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 3. Lead Details Modal -->
+    <div id="lead-details-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md max-h-[88vh] overflow-y-auto p-5 space-y-4 shadow-2xl relative">
+            <button onclick="closeLeadDetailsModal()" class="absolute top-4 left-4 text-zinc-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            
+            <h3 class="text-base font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
+                <i data-lucide="user-cog" class="w-4.5 h-4.5 text-lime-400"></i>
+                כרטיס מתאמן מפורט
+            </h3>
+            
+            <!-- Lead Contact -->
+            <div class="space-y-2 bg-zinc-950 p-3 rounded-xl border border-zinc-900 text-xs">
+                <div class="flex justify-between"><span class="text-zinc-500">שם מלא:</span> <span class="font-bold text-white" id="detail-fullName">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">מין:</span> <span class="font-bold text-white" id="detail-gender">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">מדדים (גיל / גובה / משקל):</span> <span class="font-bold text-white" id="detail-metrics">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">מדד מסת גוף (BMI):</span> <span class="font-bold text-lime-400" id="detail-bmi">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">טלפון:</span> <span class="font-bold text-white ltr" id="detail-phone">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">אינסטגרם:</span> <span class="font-bold text-lime-400" id="detail-instagram">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">אישור דיוור:</span> <span class="font-bold" id="detail-compliance">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">סוג ליד:</span> <span class="font-bold" id="detail-leadType">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">זמן שהייה באתר:</span> <span class="font-bold text-zinc-300" id="detail-duration">-</span></div>
+                <div class="flex justify-between"><span class="text-zinc-500">תאריך הרשמה:</span> <span class="font-bold text-zinc-400" id="detail-timestamp">-</span></div>
+            </div>
+            
+            <!-- Assessment Detailed Answers -->
+            <div class="space-y-2.5">
+                <h4 class="font-bold text-xs text-lime-400">תשובות שאלון האבחון & דגשים אישיים:</h4>
+                <div class="space-y-2 text-[11px] leading-relaxed" id="detail-answers-container">
+                    <!-- Populated in JS -->
+                </div>
+            </div>
+
+            <!-- Action Controls inside Card -->
+            <div class="pt-3 border-t border-zinc-800 flex flex-col gap-2">
+                <button id="detail-btn-edit-plan" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white font-bold text-xs rounded-xl border border-zinc-700 transition-all flex items-center justify-center gap-1.5">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5 text-lime-400"></i>
+                    <span>ערוך אישית את תוכנית האימונים של מתאמן זה ✏️</span>
+                </button>
+                <div class="flex gap-2">
+                    <button id="detail-btn-whatsapp" class="flex-1 py-2.5 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1">
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                        <span>שלח וואטסאפ מהיר</span>
+                    </button>
+                    <button onclick="closeLeadDetailsModal()" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-xl transition-all">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Edit Lead Plan Modal -->
+    <div id="edit-plan-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-5 space-y-4 shadow-2xl relative">
+            <button onclick="closeEditPlanModal()" class="absolute top-4 left-4 text-zinc-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            
+            <h3 class="text-base font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
+                <i data-lucide="edit" class="w-4 h-4 text-lime-400"></i>
+                עריכה אישית של תוכנית האימונים עבור: <span id="edit-plan-lead-name" class="text-lime-400"></span>
+            </h3>
+
+            <div class="space-y-1">
+                <label class="block text-xs text-zinc-400 font-medium">תוכן תוכנית האימונים:</label>
+                <textarea id="edit-plan-textarea" rows="14" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-white font-mono leading-relaxed focus:border-lime-500"></textarea>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveCustomPlanForLead()" class="flex-1 py-3 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                    <span>שמור שינויים בתוכנית</span>
+                </button>
+                <button onclick="closeEditPlanModal()" class="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-xl transition-all">ביטול</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Abandonment / Partial Answers Modal -->
+    <div id="session-details-modal" class="hidden fixed inset-0 z-[115] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
+            <button onclick="closeSessionDetailsModal()" class="absolute top-4 left-4 text-zinc-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <h3 class="text-sm font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4 text-orange-400"></i>
+                נתוני גלישה ונטישה (סשן)
+            </h3>
+            <div id="session-modal-content" class="text-xs space-y-2 text-zinc-300 leading-relaxed max-h-[60vh] overflow-y-auto"></div>
+            <button onclick="closeSessionDetailsModal()" class="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs rounded-xl transition-all">סגור</button>
+        </div>
+    </div>
+
+    <!-- 6. Exercise Bank CMS Modal -->
+    <div id="cms-exercise-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-3.5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCmsExerciseModal()" class="absolute top-4 left-4 text-zinc-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <h3 class="text-sm font-bold text-white border-b border-zinc-800 pb-2 flex items-center gap-2" id="cms-modal-title">
+                הוסף / ערוך תרגיל במאגר
+            </h3>
+            <input type="hidden" id="cms-ex-id">
+            <div class="space-y-2.5 text-xs">
+                <div>
+                    <label class="block text-zinc-400 font-medium mb-1">שם התרגיל:</label>
+                    <input type="text" id="cms-ex-name" placeholder="לדוגמה: לחיצת רגליים במכונה" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white placeholder:text-zinc-600 focus:border-lime-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-zinc-400 font-medium mb-1">קבוצת שריר:</label>
+                        <select id="cms-ex-muscle" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500 focus:outline-none">
+                            <option value="legs">רגליים</option>
+                            <option value="chest">חזה</option>
+                            <option value="back">גב</option>
+                            <option value="shoulders">כתפיים</option>
+                            <option value="arms">ידיים</option>
+                            <option value="core">בטן וליבה</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 font-medium mb-1">ציוד נדרש:</label>
+                        <select id="cms-ex-equip" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white focus:border-lime-500 focus:outline-none">
+                            <option value="gym">חדר כושר</option>
+                            <option value="home">משקולות ביתיות</option>
+                            <option value="bodyweight">משקל גוף</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-zinc-400 font-medium mb-1">סטים וחזרות:</label>
+                        <input type="text" id="cms-ex-setsreps" placeholder="2-3 סטים x 6-12 חזרות" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white placeholder:text-zinc-600 focus:border-lime-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 font-medium mb-1">זמן מנוחה:</label>
+                        <input type="text" id="cms-ex-rest" placeholder="90-120 שניות (ניתן גם יותר במידת הצורך)" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white placeholder:text-zinc-600 focus:border-lime-500 focus:outline-none">
+                    </div>
+                </div>
+                <input type="hidden" id="cms-ex-video">
+                <input type="hidden" id="cms-ex-image">
+
+                <!-- Multi-Stage Demonstration Images in Personal Cloud -->
+                <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800 space-y-3">
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+                        <span class="font-extrabold text-xs text-lime-400 flex items-center gap-1.5">
+                            <i data-lucide="camera" class="w-4 h-4 text-cyan-400"></i>
+                            תמונות הדגמת ביצוע שלב-אחר-שלב 📸
+                        </span>
+                        <span class="text-[10px] text-zinc-400">3 שלבי תנועה</span>
+                    </div>
+
+                    <!-- Stage 1 -->
+                    <div class="bg-zinc-900/70 p-2.5 rounded-lg border border-zinc-800/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-[11px] text-white flex items-center gap-1">
+                                <span class="w-4 h-4 rounded-full bg-lime-500/20 text-lime-400 flex items-center justify-center text-[10px]">1</span>
+                                שלב 1: עמדת מוצא והכנה
+                            </span>
+                            <span class="text-[10px] text-zinc-400" id="cms-stage1-source-label">תמונת שלב 1</span>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input type="text" id="cms-stage1-image" placeholder="קישור לתמונה https://... או העלה מהמכשיר" oninput="previewCmsStageImage(1)" class="flex-1 bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs ltr focus:border-lime-500">
+                            <label class="py-1 px-2.5 bg-zinc-800 hover:bg-zinc-700 text-cyan-400 text-[11px] font-bold rounded border border-zinc-700 cursor-pointer flex items-center gap-1 shrink-0 transition-colors">
+                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                <span>העלה 📁</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleStageFileUpload(1, this)">
+                            </label>
+                        </div>
+                        <div id="cms-stage1-preview-wrap" class="hidden w-full h-24 bg-zinc-950 rounded border border-zinc-800 overflow-hidden relative">
+                            <img id="cms-stage1-preview" src="" class="w-full h-full object-contain">
+                            <button type="button" onclick="clearCmsStageImage(1)" class="absolute top-1 left-1 bg-black/80 hover:bg-red-600 text-white p-1 rounded-full text-[10px] transition-colors"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                        <input type="text" id="cms-stage1-cues" placeholder="דגש לשלב 1: עמדת מוצא, מנח רגליים/אחיזה, נעילת שכמות..." class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs placeholder:text-zinc-600 focus:border-lime-500">
+                    </div>
+
+                    <!-- Stage 2 -->
+                    <div class="bg-zinc-900/70 p-2.5 rounded-lg border border-zinc-800/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-[11px] text-white flex items-center gap-1">
+                                <span class="w-4 h-4 rounded-full bg-lime-500/20 text-lime-400 flex items-center justify-center text-[10px]">2</span>
+                                שלב 2: ירידה ותנועה (מאמץ שיא)
+                            </span>
+                            <span class="text-[10px] text-zinc-400" id="cms-stage2-source-label">תמונת שלב 2</span>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input type="text" id="cms-stage2-image" placeholder="קישור לתמונה https://... או העלה מהמכשיר" oninput="previewCmsStageImage(2)" class="flex-1 bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs ltr focus:border-lime-500">
+                            <label class="py-1 px-2.5 bg-zinc-800 hover:bg-zinc-700 text-cyan-400 text-[11px] font-bold rounded border border-zinc-700 cursor-pointer flex items-center gap-1 shrink-0 transition-colors">
+                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                <span>העלה 📁</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleStageFileUpload(2, this)">
+                            </label>
+                        </div>
+                        <div id="cms-stage2-preview-wrap" class="hidden w-full h-24 bg-zinc-950 rounded border border-zinc-800 overflow-hidden relative">
+                            <img id="cms-stage2-preview" src="" class="w-full h-full object-contain">
+                            <button type="button" onclick="clearCmsStageImage(2)" class="absolute top-1 left-1 bg-black/80 hover:bg-red-600 text-white p-1 rounded-full text-[10px] transition-colors"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                        <input type="text" id="cms-stage2-cues" placeholder="דגש לשלב 2: ירידה מבוקרת 3 שניות, זוויות מפרק, נשיפה/שאיפה..." class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs placeholder:text-zinc-600 focus:border-lime-500">
+                    </div>
+
+                    <!-- Stage 3 -->
+                    <div class="bg-zinc-900/70 p-2.5 rounded-lg border border-zinc-800/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-[11px] text-white flex items-center gap-1">
+                                <span class="w-4 h-4 rounded-full bg-lime-500/20 text-lime-400 flex items-center justify-center text-[10px]">3</span>
+                                שלב 3: כיווץ שיא ונעילה מבוקרת
+                            </span>
+                            <span class="text-[10px] text-zinc-400" id="cms-stage3-source-label">תמונת שלב 3</span>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <input type="text" id="cms-stage3-image" placeholder="קישור לתמונה https://... או העלה מהמכשיר" oninput="previewCmsStageImage(3)" class="flex-1 bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs ltr focus:border-lime-500">
+                            <label class="py-1 px-2.5 bg-zinc-800 hover:bg-zinc-700 text-cyan-400 text-[11px] font-bold rounded border border-zinc-700 cursor-pointer flex items-center gap-1 shrink-0 transition-colors">
+                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                <span>העלה 📁</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleStageFileUpload(3, this)">
+                            </label>
+                        </div>
+                        <div id="cms-stage3-preview-wrap" class="hidden w-full h-24 bg-zinc-950 rounded border border-zinc-800 overflow-hidden relative">
+                            <img id="cms-stage3-preview" src="" class="w-full h-full object-contain">
+                            <button type="button" onclick="clearCmsStageImage(3)" class="absolute top-1 left-1 bg-black/80 hover:bg-red-600 text-white p-1 rounded-full text-[10px] transition-colors"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                        <input type="text" id="cms-stage3-cues" placeholder="דגש לשלב 3: כיווץ סופי של שריר המטרה, החזקה לשנייה ללא פריקת מתח..." class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white text-xs placeholder:text-zinc-600 focus:border-lime-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-zinc-400 font-medium mb-1">דגשים טכניים וביומכניים:</label>
+                    <textarea id="cms-ex-notes" rows="2" placeholder="דגשי בטיחות, מנח גב, נשימה וכד'" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-white placeholder:text-zinc-600 focus:border-lime-500 focus:outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-zinc-400 font-medium mb-1">הגבלות ואיסורים רפואיים (Contraindications):</label>
+                    <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px]">
+                        <label class="flex items-center gap-2 text-zinc-300 cursor-pointer hover:text-white transition-colors">
+                            <input type="checkbox" id="cms-ban-acl" class="rounded accent-lime-500 cursor-pointer">
+                            <span>אסור בקרע צולבת (ACL)</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-zinc-300 cursor-pointer hover:text-white transition-colors">
+                            <input type="checkbox" id="cms-ban-back" class="rounded accent-lime-500 cursor-pointer">
+                            <span>אסור בפריצת דיסק/גב</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-zinc-300 cursor-pointer hover:text-white transition-colors">
+                            <input type="checkbox" id="cms-ban-shoulder" class="rounded accent-lime-500 cursor-pointer">
+                            <span>אסור בפציעת כתף</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-zinc-300 cursor-pointer hover:text-pink-400 transition-colors">
+                            <input type="checkbox" id="cms-ban-pregnancy" class="rounded accent-pink-500 cursor-pointer">
+                            <span>אסור בהריון 🤰</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveCmsExercise()" class="flex-1 py-2.5 bg-lime-500 hover:bg-lime-600 text-black font-bold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/10">שמור תרגיל</button>
+                <button onclick="closeCmsExerciseModal()" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-xl transition-all">ביטול</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Video Lightbox Modal -->
+    <div id="video-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/95 p-4">
+        <button onclick="closeVideoModal()" class="absolute top-4 left-4 text-zinc-400 hover:text-white p-2 transition-colors z-50 bg-zinc-900/60 rounded-full">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <div class="w-full max-w-xl aspect-video bg-zinc-950 rounded-xl overflow-hidden border border-zinc-800 shadow-2xl relative">
+            <iframe id="video-iframe" class="w-full h-full" src="" title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- 8. Coach Gino Multi-Stage Exercise Demonstration Lightbox Modal -->
+    <div id="image-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/95 p-3 sm:p-4 overflow-y-auto">
+        <button onclick="closeImageModal()" class="absolute top-4 left-4 text-zinc-400 hover:text-white p-2.5 transition-colors z-50 bg-zinc-900/80 hover:bg-zinc-800 rounded-full border border-zinc-750">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl space-y-3 p-4 sm:p-5 relative">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                <div class="space-y-0.5 text-right">
+                    <span class="text-[10px] text-lime-400 font-extrabold uppercase tracking-wider flex items-center gap-1">
+                        <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                        הדגמת ביצוע שלב-אחר-שלב | Coach Gino
+                    </span>
+                    <h4 class="font-black text-sm sm:text-base text-white" id="image-modal-title">
+                        שם התרגיל
+                    </h4>
+                </div>
+                <div class="flex items-center gap-1.5" id="image-modal-badges">
+                    <span id="image-modal-badge-muscle" class="px-2 py-0.5 rounded text-[10px] bg-lime-500/10 text-lime-400 font-bold border border-lime-500/20">חזה</span>
+                </div>
+            </div>
+
+            <!-- Multi-Stage Selector Tabs -->
+            <div class="grid grid-cols-3 gap-1.5 bg-zinc-950 p-1.5 rounded-xl border border-zinc-800 text-xs font-bold" id="image-modal-stage-tabs">
+                <button type="button" onclick="selectDemoStage(0)" id="stage-tab-0" class="stage-tab py-2 px-1 rounded-lg text-center transition-all bg-lime-500 text-black shadow-sm">
+                    <span class="block text-[10px] opacity-75 font-normal">שלב 1</span>
+                    <span class="truncate block text-xs">עמדת מוצא</span>
+                </button>
+                <button type="button" onclick="selectDemoStage(1)" id="stage-tab-1" class="stage-tab py-2 px-1 rounded-lg text-center transition-all text-zinc-400 hover:text-white">
+                    <span class="block text-[10px] opacity-75 font-normal">שלב 2</span>
+                    <span class="truncate block text-xs">ירידה ותנועה</span>
+                </button>
+                <button type="button" onclick="selectDemoStage(2)" id="stage-tab-2" class="stage-tab py-2 px-1 rounded-lg text-center transition-all text-zinc-400 hover:text-white">
+                    <span class="block text-[10px] opacity-75 font-normal">שלב 3</span>
+                    <span class="truncate block text-xs">כיווץ שיא ונעילה</span>
+                </button>
+            </div>
+
+            <!-- Demonstration Image Viewport -->
+            <div class="relative w-full h-72 sm:h-80 bg-zinc-950 rounded-xl overflow-hidden flex items-center justify-center border border-zinc-800 group">
+                <img id="image-modal-src" src="" alt="Coach Gino Demonstration" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
+                
+                <!-- Sleek Placeholder when Coach has not uploaded an image for this stage -->
+                <div id="image-modal-empty-state" class="hidden flex-col items-center justify-center text-center p-6 space-y-3 w-full h-full select-none">
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-750 flex items-center justify-center text-lime-400 shadow-inner">
+                        <i data-lucide="camera" class="w-8 h-8 opacity-80"></i>
+                    </div>
+                    <div class="space-y-1 max-w-xs">
+                        <div class="text-sm font-bold text-zinc-200">טרם הועלתה תמונת הדגמה אישית לשלב זה</div>
+                        <div class="text-[11px] text-zinc-400 leading-relaxed">באפשרותך להעלות תמונה או קישור אישי בכל עת דרך עריכת התרגיל במסך הניהול (ADMIN)</div>
+                    </div>
+                </div>
+
+                <!-- Stage Step Badge Overlay -->
+                <div class="absolute top-2.5 right-2.5 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-700/60 text-xs font-bold text-white flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                    <span id="image-modal-step-label">שלב 1 מתוך 3</span>
+                </div>
+            </div>
+
+            <!-- Stage Cues & Biomechanical Focus -->
+            <div class="bg-zinc-950/70 p-3 rounded-xl border border-zinc-850 space-y-1 text-right">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                    <span class="text-lime-400 flex items-center gap-1">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                        <span id="image-modal-stage-title">דגש ביצוע: עמדת מוצא והכנה</span>
+                    </span>
+                    <span class="text-[10px] text-zinc-500 font-normal">דיוק ביומכני</span>
+                </div>
+                <p id="image-modal-cues" class="text-xs text-zinc-300 leading-relaxed">
+                    הקפד על שליטה מבוקרת, נשימה סדירה ודיוק ביומכני.
+                </p>
+            </div>
+
+            <!-- Step Navigation Buttons (Prev / Next) -->
+            <div class="flex items-center justify-between gap-2 pt-1">
+                <button type="button" onclick="prevDemoStage()" id="btn-prev-stage" class="flex-1 py-2 px-3 bg-zinc-800/80 hover:bg-zinc-750 active:scale-[0.98] text-zinc-200 hover:text-white font-bold text-xs rounded-xl border border-zinc-700/50 transition-all flex items-center justify-center gap-1.5">
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    <span>השלב הקודם</span>
+                </button>
+                <div class="flex items-center gap-1 px-2 text-zinc-500" id="stage-dots">
+                    <span class="w-2 h-2 rounded-full bg-lime-400" id="dot-0"></span>
+                    <span class="w-2 h-2 rounded-full bg-zinc-700" id="dot-1"></span>
+                    <span class="w-2 h-2 rounded-full bg-zinc-700" id="dot-2"></span>
+                </div>
+                <button type="button" onclick="nextDemoStage()" id="btn-next-stage" class="flex-1 py-2 px-3 bg-lime-500 hover:bg-lime-400 active:scale-[0.98] text-black font-extrabold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <span>השלב הבא</span>
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Workout Plan Builder & Editor Modal -->
+    <div id="admin-plan-modal" class="hidden fixed inset-0 z-[130] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto p-5 space-y-4 shadow-2xl relative text-xs">
+            <button onclick="closeAdminPlanModal()" class="absolute top-4 left-4 text-zinc-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="border-b border-zinc-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2" id="plan-modal-title">
+                    <i data-lucide="layers" class="w-5 h-5 text-lime-400"></i>
+                    <span>עורך תוכנית אימון (Workout Plan Builder)</span>
+                </h3>
+                <p class="text-[11px] text-zinc-400 mt-0.5">בנה את חלוקת ימי האימון, הגדר את התרגילים, הסטים והדגשים, וקבע לאילו פרופילים בשאלון תוכנית זו תותאם.</p>
+            </div>
+
+            <input type="hidden" id="plan-edit-id">
+
+            <!-- Section 1: Basic Details -->
+            <div class="space-y-2 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-850">
+                <h4 class="font-bold text-xs text-lime-400 flex items-center gap-1.5">
+                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                    <span>1. פרטי תוכנית כלליים</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-zinc-400 text-[11px] mb-1 font-medium">שם התוכנית (יוצג למתאמן):</label>
+                        <input type="text" id="plan-edit-title" placeholder="לדוגמה: תוכנית חיטוב ועיצוב נשים 3 ימים (חדר כושר / בית)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500">
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[11px] mb-1 font-medium">מטרת התוכנית ותיאור קצר:</label>
+                        <input type="text" id="plan-edit-desc" placeholder="לדוגמה: שריפת שומן, חיטוב פלג גוף תחתון ושיפור יציבה" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Questionnaire Matching Profile -->
+            <div class="space-y-2.5 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-850">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-lime-400 flex items-center gap-1.5">
+                        <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                        <span>2. תנאי התאמה לפרופיל השאלון (Matching Rules)</span>
+                    </h4>
+                    <span class="text-[10px] text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">התוכנית תוצג למי שתואם את ההגדרות הבאות</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">מגדר:</label>
+                        <select id="plan-match-gender" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="all">הכל (גברים ונשים)</option>
+                            <option value="male">גברים בלבד ♂️</option>
+                            <option value="female">נשים בלבד ♀️</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">מטרה:</label>
+                        <select id="plan-match-goal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="all">כל המטרות</option>
+                            <option value="shred">חיטוב וירידה באחוזי שומן</option>
+                            <option value="mass">עלייה במסת שריר</option>
+                            <option value="recomp">חיטוב ושינוי הרכב הגוף</option>
+                            <option value="strength">שיפור כוח וביצועים</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">ציוד נדרש:</label>
+                        <select id="plan-match-equipment" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="all">כל סוג ציוד</option>
+                            <option value="gym">חדר כושר מלא ומאובזר</option>
+                            <option value="bodyweight">משקל גוף בלבד (קליסטניקס)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">תדירות שבועית:</label>
+                        <select id="plan-match-frequency" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="all">כל תדירות</option>
+                            <option value="2-3">2-3 פעמים בשבוע</option>
+                            <option value="4+">4+ ימים בשבוע</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">רמת כושר:</label>
+                        <select id="plan-match-level" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="all">כל הרמות</option>
+                            <option value="beginner">מתחיל (עד חצי שנה)</option>
+                            <option value="active">פעיל (חצי שנה עד שנתיים)</option>
+                            <option value="advanced">מתקדם (מעל שנתיים)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[10px] mb-1">מצב בריאותי / הריון:</label>
+                        <select id="plan-match-condition" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-1.5 text-white text-[11px] focus:border-lime-500">
+                            <option value="none">ללא הגבלות (בריא)</option>
+                            <option value="pregnancy">מותאם להריון 🤰</option>
+                            <option value="knees">מותאם לברכיים / צולבת (ACL)</option>
+                            <option value="back">מותאם לגב / פריצת דיסק</option>
+                            <option value="shoulders">מותאם לפציעת כתף</option>
+                            <option value="any">הכל מתאים / כללי</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Days and Exercises Builder -->
+            <div class="space-y-3 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-850">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold text-xs text-lime-400 flex items-center gap-1.5">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>3. ימי אימון ותרגילים (Days & Splits Builder)</span>
+                        </h4>
+                        <span class="text-[10px] text-zinc-400 bg-zinc-900/80 px-2 py-0.5 rounded border border-zinc-800 flex items-center gap-1">
+                            <i data-lucide="move" class="w-3 h-3 text-lime-400"></i>
+                            <span>ניתן לגרור תרגילים לשינוי סדר</span>
+                        </span>
+                    </div>
+                    <button type="button" onclick="addDayToEditingPlan()" class="py-1 px-2.5 bg-zinc-800 hover:bg-zinc-700 text-lime-400 border border-lime-500/30 font-bold rounded-lg transition-all flex items-center gap-1 text-[11px]">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        <span>הוסף יום אימון (Split)</span>
+                    </button>
+                </div>
+                
+                <!-- Dynamic Days Container -->
+                <div id="plan-days-container" class="space-y-3">
+                    <!-- Populated in JS -->
+                </div>
+            </div>
+
+            <!-- Section 4: Progressive Guidelines -->
+            <div class="space-y-2 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-850">
+                <h4 class="font-bold text-xs text-lime-400 flex items-center gap-1.5">
+                    <i data-lucide="list-checks" class="w-3.5 h-3.5"></i>
+                    <span>4. דגשי ביצוע וחוקי התקדמות לתוכנית זו (Guidelines):</span>
+                </h4>
+                <textarea id="plan-edit-guidelines" rows="2" placeholder="דגשי עומס פרוגרסיבי, עצימות RPE, נשימה והתאוששות ייחודיים לתוכנית זו..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500"></textarea>
+            </div>
+
+            <!-- Section 5: Customized Results Screen & Intensity / Failure Rules -->
+            <div class="space-y-3 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-850">
+                <div class="flex items-center justify-between border-b border-zinc-850 pb-2">
+                    <h4 class="font-bold text-xs text-lime-400 flex items-center gap-1.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <span>5. התאמת מסך התוצאה ("תוכנית האימון שלך מוכנה") וחוקי עצימות/כשל</span>
+                    </h4>
+                    <span class="text-[10px] text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">שליטה מלאה לפנייה אישית ומדויקת לממלא השאלון</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-zinc-400 text-[11px] mb-1 font-medium">כותרת ראשית במסך התוצאה:</label>
+                        <input type="text" id="plan-edit-results-title" placeholder="ברירת מחדל: תוכנית האימונים שלך מוכנה! 🎉" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-zinc-400 text-[11px] mb-1 font-medium">תת-כותרת / פתיח במסך התוצאה:</label>
+                        <input type="text" id="plan-edit-results-subtitle" placeholder="ברירת מחדל: תוכנית מותאמת אישית ברמת דיוק ביומכנית גבוהה שנבנתה על ידי Coach Gino:" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500 text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-zinc-400 text-[11px] mb-1 font-medium">
+                        פנייה אישית וניתוח מותאם לממלא השאלון מ-Coach Gino (תומך בתגיות: <span class="text-lime-400 font-mono">{name}</span>, <span class="text-lime-400 font-mono">{goal}</span>, <span class="text-lime-400 font-mono">{split}</span>, <span class="text-lime-400 font-mono">{weight}</span>, <span class="text-lime-400 font-mono">{height}</span>):
+                    </label>
+                    <textarea id="plan-edit-custom-message" rows="3" placeholder="היי {name}, ראיתי שהמטרה שלך היא {goal}. בניתי את התוכנית הזו במיוחד עבורך כך שתתאים בדיוק..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500 text-xs leading-relaxed"></textarea>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-zinc-400 text-[11px] font-medium">
+                            חוק עצימות וכשל שריר (ייכתב כחוק ברזל רק אם תגדיר אותו כאן):
+                        </label>
+                        <span class="text-[10px] text-zinc-500">אם יישאר ריק - לא יוצג שום חוק כשל אוטומטי!</span>
+                    </div>
+                    <input type="text" id="plan-edit-intensity-rule" placeholder="לדוגמה למתקדמים: 'עצימות RPE 8-9 (חזרה-שתיים לפני כשל)'. למתחילים: 'אין להגיע לכשל שריר - לשמור על טכניקה מבוקרת בלבד'." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-white placeholder-zinc-600 focus:border-lime-500 text-xs">
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="flex gap-2 pt-2 border-t border-zinc-800">
+                <button type="button" onclick="saveWorkoutPlan()" class="flex-1 py-3 bg-lime-500 hover:bg-lime-600 text-black font-extrabold text-xs rounded-xl transition-all shadow-lg shadow-lime-500/10 flex items-center justify-center gap-1.5">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <span>שמור תוכנית אימון במערכת</span>
+                </button>
+                <button type="button" onclick="closeAdminPlanModal()" class="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium rounded-xl transition-all">
+                    ביטול
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= AVATAR CROP & ADJUST MODAL ================= -->
+    <div id="avatar-cropper-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md p-5 sm:p-6 space-y-4 shadow-2xl relative text-right">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-lime-500/10 border border-lime-500/30 flex items-center justify-center text-lime-400 shrink-0">
+                        <i data-lucide="crop" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-white">התאמת וחיתוך תמונת פרופיל</h3>
+                        <p class="text-[11px] text-zinc-400">גרור, הגדל וסובב כדי להתאים את התמונה לעיגול</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAvatarCropperModal()" class="p-1.5 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800 transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Cropper Canvas Viewport Area -->
+            <div class="space-y-2">
+                <div id="cropper-viewport-container" class="relative w-[280px] h-[280px] sm:w-[300px] sm:h-[300px] mx-auto rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-inner select-none cursor-grab active:cursor-grabbing touch-none">
+                    <canvas id="avatar-cropper-canvas" width="300" height="300" class="absolute inset-0 w-full h-full block"></canvas>
+                </div>
+                <div class="flex items-center justify-center gap-4 text-[11px] text-zinc-400">
+                    <span class="flex items-center gap-1"><i data-lucide="move" class="w-3.5 h-3.5 text-lime-400"></i> גרירה להזזה</span>
+                    <span class="flex items-center gap-1"><i data-lucide="zoom-in" class="w-3.5 h-3.5 text-lime-400"></i> גלגלת / סליידר לזום</span>
+                </div>
+            </div>
+
+            <!-- Zoom & Rotation Controls -->
+            <div class="space-y-3 bg-zinc-950/70 p-3.5 rounded-2xl border border-zinc-850">
+                <!-- Zoom Slider Row -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                        <span class="text-zinc-300 flex items-center gap-1.5">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-lime-400"></i>
+                            זום / גודל תמונה:
+                        </span>
+                        <span id="cropper-zoom-badge" class="font-mono text-lime-400 text-xs">100%</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <button type="button" onclick="adjustCropperZoom(-0.1)" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-lime-500/50 flex items-center justify-center transition-all cursor-pointer">
+                            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <input type="range" id="cropper-zoom-slider" min="0.2" max="3.5" step="0.01" value="1" oninput="handleCropperZoomSlider(this.value)" class="flex-grow h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-lime-500">
+                        <button type="button" onclick="adjustCropperZoom(0.1)" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-lime-500/50 flex items-center justify-center transition-all cursor-pointer">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Action Buttons: Rotate & Center -->
+                <div class="grid grid-cols-3 gap-2 pt-1">
+                    <button type="button" onclick="rotateCropper(-90)" class="py-2 px-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-medium flex items-center justify-center gap-1 transition-all cursor-pointer">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span>סובב 90°-</span>
+                    </button>
+                    <button type="button" onclick="rotateCropper(90)" class="py-2 px-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-medium flex items-center justify-center gap-1 transition-all cursor-pointer">
+                        <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                        <span>סובב 90°+</span>
+                    </button>
+                    <button type="button" onclick="fitAndCenterCropper()" class="py-2 px-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-medium flex items-center justify-center gap-1 transition-all cursor-pointer">
+                        <i data-lucide="crosshair" class="w-3.5 h-3.5 text-lime-400"></i>
+                        <span>מרכז והתאם</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="space-y-2 pt-1 border-t border-zinc-800">
+                <button type="button" onclick="applyAndSaveCroppedAvatar()" class="w-full py-3.5 px-4 bg-lime-500 hover:bg-lime-600 active:scale-[0.99] text-black font-black text-sm rounded-xl transition-all shadow-lg shadow-lime-500/20 flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <span>שמור והחל בדף הפתיחה</span>
+                </button>
+                
+                <div class="flex gap-2">
+                    <button type="button" onclick="triggerSelectDifferentAvatar()" class="flex-1 py-2.5 px-3 bg-zinc-850 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold rounded-xl border border-zinc-750 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="image-plus" class="w-3.5 h-3.5 text-lime-400"></i>
+                        <span>בחר תמונה אחרת</span>
+                    </button>
+                    <button type="button" id="btn-cropper-remove-avatar" onclick="removeCoachAvatar()" class="hidden flex-1 py-2.5 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <span>הסר תמונה</span>
+                    </button>
+                    <button type="button" onclick="closeAvatarCropperModal()" class="py-2.5 px-4 bg-zinc-800 hover:bg-zinc-750 text-zinc-400 hover:text-white text-xs font-medium rounded-xl transition-all cursor-pointer">
+                        ביטול
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= PDF PRINTABLE CONTAINER (Rendered via html2pdf & Print) ================= -->
+    <div id="pdf-printable-container" class="hidden">
+        <!-- Populated dynamically in downloadPlanPDF() -->
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
