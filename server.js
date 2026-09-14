@@ -19,6 +19,7 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
     
+
     // Normalize URL and resolve local path
     let filePath = req.url === '/' ? './index.html' : '.' + req.url;
     filePath = path.resolve(filePath);
